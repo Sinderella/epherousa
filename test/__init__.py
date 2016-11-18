@@ -1,3 +1,5 @@
+import sys
+
 # Fix encoding problem in python 2.7
 try:
     reload(sys)
