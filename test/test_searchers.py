@@ -18,14 +18,14 @@ class TestSearcherCVE(unittest.TestCase):
         self.assertGreater(len(exploitdb.exploits), 0, 'Exploit-db could not find any Dirty COW exploit')
 
     def test_packetstorm(self):
-        exploitdb = PacketStorm(_cve=self.cve, _verbose=True, _limit=self.limit)
-        exploitdb.findExploits()
-        self.assertGreater(len(exploitdb.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
+        packetstorm = PacketStorm(_cve=self.cve, _verbose=True, _limit=self.limit)
+        packetstorm.findExploits()
+        self.assertGreater(len(packetstorm.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
 
     def test_zerodaytoday(self):
-        exploitdb = ZeroDayToday(_cve=self.cve, _verbose=True, _limit=self.limit)
-        exploitdb.findExploits()
-        self.assertGreater(len(exploitdb.exploits), 0, '0day.today could not find any Dirty COW exploit')
+        zerodaytoday = ZeroDayToday(_cve=self.cve, _verbose=True, _limit=self.limit)
+        zerodaytoday.findExploits()
+        self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
 
 
 class TestSearcherPhrase(unittest.TestCase):
@@ -39,11 +39,11 @@ class TestSearcherPhrase(unittest.TestCase):
         self.assertGreater(len(exploitdb.exploits), 0, 'Exploit-db could not find any Dirty COW exploit')
 
     def test_packetstorm(self):
-        exploitdb = PacketStorm(_search_string=self.phrase, _verbose=True, _limit=self.limit)
-        exploitdb.findExploits()
-        self.assertGreater(len(exploitdb.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
+        packetstorm = PacketStorm(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        packetstorm.findExploits()
+        self.assertGreater(len(packetstorm.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
 
     def test_zerodaytoday(self):
-        exploitdb = ZeroDayToday(_search_string=self.phrase, _verbose=True, _limit=self.limit)
-        exploitdb.findExploits()
-        self.assertGreater(len(exploitdb.exploits), 0, '0day.today could not find any Dirty COW exploit')
+        zerodaytoday = ZeroDayToday(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        zerodaytoday.findExploits()
+        self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
