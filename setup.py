@@ -13,5 +13,9 @@ setup(
     description='Vulnerability searcher',
     # author='',
     # author_email='',
-    # url=''
+    # url='',
+    packages=[
+        'untitled',
+        'untitled.searchers',
+    ]
 )
