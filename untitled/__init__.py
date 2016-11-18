@@ -57,7 +57,7 @@ def main():
     log.debug("Arguments: {}".format(args))
 
     # Construct the list of searchers to use
-    searcher_classes = [ExploitDB, PacketStorm, ZeroDayToday]  # Keep alphabetical to make life easier
+    searcher_classes = [ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday]  # Keep alphabetical to make life easier
 
     if args.enable:
         enable_regexes = args.enable.split(',')
