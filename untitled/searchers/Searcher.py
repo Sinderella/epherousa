@@ -36,6 +36,7 @@ class Searcher(object):
             self.findExploitsByCVE()
         else:
             self.findExploitsByString()
+        self.log.debug('Found {} exploits'.format(len(self.exploits)))
 
     def findExploitsByCVE(self):
         """Searches the database using self.cve"""
