@@ -26,3 +26,24 @@ class TestSearcherCVE(unittest.TestCase):
         exploitdb = ZeroDayToday(_cve=self.cve, _verbose=True, _limit=self.limit)
         exploitdb.findExploits()
         self.assertGreater(len(exploitdb.exploits), 0, '0day.today could not find any Dirty COW exploit')
+
+
+class TestSearcherPhrase(unittest.TestCase):
+    def setUp(self):
+        self.phrase = 'Dirty COW'
+        self.limit = 5
+
+    def test_exploitdb(self):
+        exploitdb = ExploitDB(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        exploitdb.findExploits()
+        self.assertGreater(len(exploitdb.exploits), 0, 'Exploit-db could not find any Dirty COW exploit')
+
+    def test_packetstorm(self):
+        exploitdb = PacketStorm(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        exploitdb.findExploits()
+        self.assertGreater(len(exploitdb.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
+
+    def test_zerodaytoday(self):
+        exploitdb = ZeroDayToday(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        exploitdb.findExploits()
+        self.assertGreater(len(exploitdb.exploits), 0, '0day.today could not find any Dirty COW exploit')
