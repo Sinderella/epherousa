@@ -1,10 +1,13 @@
+# coding=utf-8
+from __future__ import unicode_literals
+
 from datetime import datetime
 
 import requests
 from lxml import html
 
-from models import Exploit
-from searchers import Searcher
+from .Searcher import Searcher
+from ..models import Exploit
 
 
 class ZeroDayToday(Searcher):
@@ -18,7 +21,8 @@ class ZeroDayToday(Searcher):
         # It looks like a lot of stuff on 0day.today might not be tagged properly with CVEs
         # For now using this method, though may just use normal text search in the future
 
-        search_url = "http://0day.today/search?search_request=&search_type=1&search_in_text=on&category=-1&platform=-1&price_from=0&price_to=-1&author_login=&cve=" + self.cve
+        search_url = "http://0day.today/search?search_request=&search_type=1&search_in_text=on&category=-1" \
+                     "&platform=-1&price_from=0&price_to=-1&author_login=&cve=" + self.cve
         self.findExploitsFromURL(search_url)
 
     def findExploitsByString(self):

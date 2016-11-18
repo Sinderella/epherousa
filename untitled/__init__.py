@@ -1,11 +1,17 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# coding=utf-8
+
+from __future__ import unicode_literals
 
 import argparse
+import re
 import threading
 
 from logbook import NOTICE, DEBUG
 
-from searchers import *
+from .logger import setup_logger
+from .models import Exploit
+from .searchers import *
 
 
 def parse_args():
@@ -15,19 +21,22 @@ def parse_args():
         description="Search mutltiple sources for exploits for CVEs or software versions")
     arg_parser.add_argument("cve", help="The cve to find exploits for.")
     arg_parser.add_argument("-d", "--disable",
-                            help="Enable only these scanners. Input is interpreted as a series of comma-seperated case-insensitive regexes.")
+                            help="Disable only these scanners. Input is interpreted as a series of comma-seperated "
+                                 "case-insensitive regexes.")
     arg_parser.add_argument("-e", "--enable",
-                            help="Enable only these scanners. Input is interpreted as a series of comma-seperated case-insensitive regexes.")
+                            help="Enable only these scanners. Input is interpreted as a series of comma-seperated "
+                                 "case-insensitive regexes.")
     arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging.")
     arg_parser.add_argument("-p", "--phrase", action="store_true",
                             help="Force interpreting the search argument as a search string rather than a CVE")
     arg_parser.add_argument("-l", "--limit", type=int, default=5,
-                            help="Limit the results of the exploits returned for each Scanner. Default value is set to 0 for no limit.")
+                            help="Limit the results of the exploits returned for each Scanner. Default value is set to "
+                                 "0 for no limit.")
 
     return arg_parser.parse_args()
 
 
-def filterClassList(class_list, regex_list):
+def filter_class_list(class_list, regex_list):
     """Takes a list of classes and a list of regexes, and returns a list of all the classes that have a matching name"""
 
     class_names = [c.__name__ for c in class_list]
@@ -52,11 +61,11 @@ def main():
 
     if args.enable:
         enable_regexes = args.enable.split(',')
-        searcher_classes = filterClassList(searcher_classes, enable_regexes)
+        searcher_classes = filter_class_list(searcher_classes, enable_regexes)
 
     if args.disable:
         disable_regexes = args.disable.split(',')
-        disabled_classes = filterClassList(searcher_classes, disable_regexes)
+        disabled_classes = filter_class_list(searcher_classes, disable_regexes)
         searcher_classes = [c for c in searcher_classes if c not in disabled_classes]
 
     # Actually do the searching
@@ -73,12 +82,13 @@ def main():
     # Actually create the searchers
     limit = args.limit if args.limit else 0
     log.debug("Setting limit to {}".format(limit))
-    searchers = [searcher_class(_cve=cve, _search_string=phrase, _verbose=args.verbose, _limit=limit) for searcher_class
-                 in searcher_classes]
-    log.info("Setting {} searchers {}".format(len(searchers), searchers))
+    searcher_list = [searcher_class(_cve=cve, _search_string=phrase, _verbose=args.verbose, _limit=limit) for
+                     searcher_class
+                     in searcher_classes]
+    log.info("Setting {} searchers {}".format(len(searcher_list), searcher_list))
 
     threads = []
-    for s in searchers:
+    for s in searcher_list:
         new_thread = threading.Thread(target=s.findExploits)
         new_thread.start()
         threads.append(new_thread)
@@ -87,13 +97,9 @@ def main():
     # wait for each thread until all done
     [thread.join() for thread in threads]
 
-    Exploit.calculateWidths(searchers)
+    Exploit.calculateWidths(searcher_list)
     Exploit.printHeader()
-    for s in searchers:
+    for s in searcher_list:
         s.printExploits()
 
     Exploit.printFooter()
-
-
-if __name__ == '__main__':
-    main()

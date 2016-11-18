@@ -1,11 +1,14 @@
+# coding=utf-8
+from __future__ import unicode_literals
+
 import re
 from datetime import datetime
 
 import requests
 from lxml import html
 
-from models import Exploit
-from searchers import Searcher
+from .Searcher import Searcher
+from ..models import Exploit
 
 
 class PacketStorm(Searcher):
@@ -15,20 +18,19 @@ class PacketStorm(Searcher):
         self.description = "Searches packetstormsecurity.com for exploits"
 
     def findExploitsByCVE(self):
-        #Packet storm has no way to specifically search for CVEs, so just search by string for all of them
+        # Packet storm has no way to specifically search for CVEs, so just search by string for all of them
         self.search_string = self.cve
         self.findExploitsByString()
-
 
     def findExploitsByString(self):
         results_tree = self.getPageTree(1)
 
-        #Check if any results were returned
+        # Check if any results were returned
         if len(results_tree.xpath("//h1[text()='No Results Found']")) != 0:
             self.log.notice("PacketStorm: No results found")
             return
 
-        #Get the number of pages
+        # Get the number of pages
         page_text = results_tree.xpath("//div[@id='nv']/strong[contains(text(), 'Page ')]/text()")
         if len(page_text) > 0:
             page_text = page_text[0]
@@ -43,7 +45,7 @@ class PacketStorm(Searcher):
             self.log.notice("PacketStorm: Error finding number of pages.")
 
         results_files = results_tree.xpath("//dl[contains(@class, 'file')]")
-        for i in range(2, num_pages+1):
+        for i in range(2, num_pages + 1):
             if len(results_files) < self.limit:
                 results_tree = self.getPageTree(i)
                 results_files.extend(results_tree.xpath("//dl[contains(@class, 'file')]"))
@@ -53,24 +55,25 @@ class PacketStorm(Searcher):
 
         for rfile in results_files:
             tags = rfile.xpath("./dd[contains(@class, 'tags')]//a/text()")
-            if "exploit" not in tags: continue
+            if "exploit" not in tags:
+                continue
 
-            #Get date
-            date_string = rfile.xpath("./dd[@class='datetime']/a/text()") #e.g. Aug 24, 2016
+            # Get date
+            date_string = rfile.xpath("./dd[@class='datetime']/a/text()")  # e.g. Aug 24, 2016
             if len(date_string) > 0:
                 date_string = date_string[0]
             else:
                 self.log.warn("PacketStorm: Failed to find date")
             date = datetime.strptime(date_string, "%b %d, %Y")
 
-            #Get description
+            # Get description
             desc = rfile.xpath("./dt/a[contains(@href, '/files')]/text()")
             if len(desc) > 0:
                 desc = desc[0]
             else:
                 self.log.warn("PacketStorm: Failed to find description.")
 
-            #Get url
+            # Get url
             link = rfile.xpath("./dt/a[contains(@href, '/files')]/@href")
             if len(link) > 0:
                 link = link[0]
@@ -84,9 +87,9 @@ class PacketStorm(Searcher):
             exploit.url = link
             self.exploits.append(exploit)
 
-
     def getPageTree(self, page_number):
-        search_url = "https://packetstormsecurity.com/search/files/page" + str(page_number) + "/search/?s=files&q=" + self.search_string
+        search_url = "https://packetstormsecurity.com/search/files/page" + str(
+            page_number) + "/search/?s=files&q=" + self.search_string
         results_page = requests.get(search_url)
         self.log.info('Requesting {}'.format(search_url))
         return html.fromstring(results_page.content)
