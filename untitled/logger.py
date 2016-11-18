@@ -1,8 +1,9 @@
+# coding=utf-8
 """
 fundamental logging methods
 
 critical – for errors that lead to termination
-error – for errors that occur, but are handled
+error - for errors that occur, but are handled
 warning – for exceptional circumstances that might not be errors
 notice – for non-error messages you usually want to see
 info – for messages you usually don’t want to see

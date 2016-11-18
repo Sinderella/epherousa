@@ -1,7 +1,10 @@
-from logger import setup_logger
+# coding=utf-8
+from __future__ import unicode_literals
+
+from untitled.logger import setup_logger
 
 
-class Searcher:
+class Searcher(object):
     """A template class for the exploit searchers"""
 
     def __init__(self, _cve="", _search_string="", _verbose=False, _limit=0):
@@ -45,7 +48,7 @@ class Searcher:
         """Print the contents of self.exploits, only up to the limit of the searcher"""
         if self.limit == 0:
             for e in self.exploits:
-                e.print()
+                e.print_exploit()
         else:
             for e in self.exploits[:self.limit]:
-                e.print()
+                e.print_exploit()

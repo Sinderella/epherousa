@@ -1,3 +1,5 @@
+from __future__ import unicode_literals, print_function
+
 from datetime import datetime
 
 
@@ -20,14 +22,14 @@ class Exploit:
         out = str_format.format(str(var))
         out = out[:Exploit.column_widths[name] + 2]  # Cut the string if necessary
         if end_line:
-            out = out + "|"
+            out += "|"
             end = "\n"
         else:
             end = ""
 
         print(out, end=end)
 
-    def print(self):
+    def print_exploit(self):
         """Prints the exploit in a standardised way"""
         date_string = datetime.strftime(self.date, "%Y-%m-%d")
         self.printFormatted(self.cve, "cve")
@@ -45,13 +47,15 @@ class Exploit:
 
     @staticmethod
     def calculateWidths(searchers):
-        """Takes a list of searchers and makes each column wide enough for the longest item that will be displayed in it"""
+        """Takes a list of searchers and makes each column wide enough for the longest item
+        that will be displayed in it"""
         # Note that the date is always the same length since it is printed in a given format
         exploits = []
         for s in searchers:
             exploits.extend(s.exploits)
 
-        if len(exploits) == 0: return  # Otherwise we get a crash for trying evaluate max of an empty sequence
+        if len(exploits) == 0:
+            return  # Otherwise we get a crash for trying evaluate max of an empty sequence
 
         widths = {}
         widths["cve"] = max([len(e.cve) for e in exploits])
