@@ -1,4 +1,4 @@
-# sploitsearch
+# sploitsearch [![Build Status](https://travis-ci.com/Sinderella/untitled.svg?token=8Z4yehRhLixppVCDLLLp&branch=master)](https://travis-ci.com/Sinderella/untitled)
 
 A simple tool to automate exploit searching and as well as vulnerability reporting. Searches multiple sources for exploits of a given CVE or description and also reports back various sources and info related to the vulnerability.
 
