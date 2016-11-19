@@ -19,6 +19,7 @@ class SecurityFocus(Searcher):
 
     def findExploitsByCVE(self):
         session = Session()
+        self.log.debug('Posting search form: {} with {}'.format(self.search_url, self.cve))
         response = session.post(self.search_url, data={'CVE': self.cve, 'op': 'display_list', 'c': 12},
                                 headers={'User-Agent': 'Mozilla/5.0'})
 
@@ -26,16 +27,27 @@ class SecurityFocus(Searcher):
         soup = BeautifulSoup(content, 'html.parser')
         # retrieve table with style, it has no class or ID to identify
         table = soup.find_all('div', style='padding: 4px;')
+        if len(table) == 0:
+            self.log.error('Could not find a list, web layout may have changed. Please create an issue on the project.')
+            raise RuntimeError(
+                'Could not find a list, web layout may have changed. Please create an issue on the project.')
 
         # TODO: currently does not respect limit, but retrieve only first page
-        # parse table, one exploit row has 11 HTML tags
-        for idx in range(0, len(table[0].contents), 11):
-            exploit = Exploit()
-            exploit.cve = self.cve
-            exploit.desc = table[0].contents[idx+1].text
-            exploit.date = datetime.strptime(table[0].contents[idx+4].text, "%Y-%m-%d")
-            exploit.url = table[0].contents[idx+7].text
-            self.exploits.append(exploit)
+        try:
+            # parse table, one exploit row has 11 HTML tags
+            for idx in range(0, len(table[0].contents), 11):
+                exploit = Exploit()
+                exploit.cve = self.cve
+                exploit.desc = table[0].contents[idx + 1].text
+                exploit.date = datetime.strptime(table[0].contents[idx + 4].text, "%Y-%m-%d")
+                exploit.url = table[0].contents[idx + 7].text
+                self.exploits.append(exploit)
+        except AttributeError as e:
+            self.log.error('Could not find an attribute, web layout may have changed. Please create an issue on '
+                           'the project. {}'.format(e))
+            raise RuntimeError(
+                'Could not find a list, web layout may have changed. Please create an issue on the project. '
+                '{}'.format(e))
 
     def findExploitsByString(self):
         google = Google()

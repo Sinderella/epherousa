@@ -30,6 +30,7 @@ class Google(object):
         soup = BeautifulSoup(content, 'html.parser')
 
         results = soup.find_all('div', class_='g')
+        # TODO: add exception handler
         google_results = []
         # TODO: currently retrieve only first page
         for result in results:
