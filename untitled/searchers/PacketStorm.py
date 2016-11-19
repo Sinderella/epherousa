@@ -8,7 +8,7 @@ import requests
 from lxml import html
 
 from .Searcher import Searcher
-from ..models import Exploit
+from ..models.exploit import Exploit
 
 
 class PacketStorm(Searcher):

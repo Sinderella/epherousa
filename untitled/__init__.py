@@ -10,7 +10,7 @@ import threading
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
-from .models import Exploit
+from .models.exploit import Exploit
 from .searchers import *
 
 
