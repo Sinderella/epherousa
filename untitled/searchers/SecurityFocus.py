@@ -22,8 +22,10 @@ class SecurityFocus(Searcher):
 
         content = response.content
         soup = BeautifulSoup(content, 'html.parser')
+        # retrieve table with style, it has no class or ID to identify
         table = soup.find_all('div', style='padding: 4px;')
 
+        # parse table, one exploit row has 11 HTML tags
         for idx in range(0, len(table[0].contents), 11):
             exploit = Exploit()
             exploit.cve = self.cve
