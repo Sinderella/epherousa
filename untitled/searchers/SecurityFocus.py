@@ -55,11 +55,14 @@ class SecurityFocus(Searcher):
 
         session = Session()
         # TODO: currently does not respect limit, but retrieve only first page
-        # only get URL with '/bin/'
+        # only get URL with '/bid/'
         for result in google_results:
             if '/bid/' in result.url:
                 # return info page to users
-                clean_url = 'http://' + result.url[0:result.url.rfind('/')] + '/info'
+                if result.url[-1].isdecimal():
+                    clean_url = 'http://' + result.url
+                else:
+                    clean_url = 'http://' + result.url[0:result.url.rfind('/')]
                 # retrieving more info (CVE/date)
                 response = session.get(clean_url)
                 content = response.content
