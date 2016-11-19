@@ -1,10 +1,12 @@
 # coding=utf-8
+import re
 from datetime import datetime
 
 from bs4 import BeautifulSoup
 from requests import Session
 
 from untitled import Exploit
+from untitled.modules.google import Google
 from .Searcher import Searcher
 
 
@@ -25,6 +27,7 @@ class SecurityFocus(Searcher):
         # retrieve table with style, it has no class or ID to identify
         table = soup.find_all('div', style='padding: 4px;')
 
+        # TODO: currently does not respect limit, but retrieve only first page
         # parse table, one exploit row has 11 HTML tags
         for idx in range(0, len(table[0].contents), 11):
             exploit = Exploit()
@@ -35,4 +38,41 @@ class SecurityFocus(Searcher):
             self.exploits.append(exploit)
 
     def findExploitsByString(self):
-        pass
+        google = Google()
+        google_results = google.site(self.url.format(''), self.search_string)
+
+        session = Session()
+        # TODO: currently does not respect limit, but retrieve only first page
+        # only get URL with '/bin/'
+        for result in google_results:
+            if '/bid/' in result.url:
+                # return info page to users
+                clean_url = 'http://' + result.url[0:result.url.rfind('/')] + '/info'
+                # retrieving more info (CVE/date)
+                response = session.get(clean_url)
+                content = response.content
+                soup = BeautifulSoup(content, 'html.parser')
+                title = soup.find('span', class_='title').text
+                cve = None
+                date = None
+                for content in soup.find_all('table')[2].contents:
+                    try:
+                        text = content.text
+                        if 'CVE' in text:
+                            text = re.sub(r'[\t\n]', '', text)
+                            cve = text.split(':')[1]
+                        if 'Published' in text:
+                            text = re.sub(r'[\t\n]', '', text)
+                            date = text.split(':')[1]
+                            date = ' '.join(date.split(' ')[0:3])
+                            date = datetime.strptime(date, '%b %d %Y')
+                    except AttributeError:
+                        pass
+                exploit = Exploit()
+                if cve:
+                    exploit.cve = cve
+                if date:
+                    exploit.date = date
+                exploit.desc = title
+                exploit.url = clean_url
+                self.exploits.append(exploit)

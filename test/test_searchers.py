@@ -3,7 +3,7 @@
 
 import unittest
 
-from untitled.searchers import ExploitDB, PacketStorm, ZeroDayToday
+from untitled.searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 
 
 class TestSearcherCVE(unittest.TestCase):
@@ -27,6 +27,11 @@ class TestSearcherCVE(unittest.TestCase):
         zerodaytoday.findExploits()
         self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
 
+    def test_securityfocus(self):
+        securityfocus = SecurityFocus(_cve=self.cve, _verbose=True, _limit=self.limit)
+        securityfocus.findExploits()
+        self.assertGreater(len(securityfocus.exploits), 0, 'SecurityFocus could not find any Dirty COW exploit')
+
 
 class TestSearcherPhrase(unittest.TestCase):
     def setUp(self):
@@ -47,3 +52,8 @@ class TestSearcherPhrase(unittest.TestCase):
         zerodaytoday = ZeroDayToday(_search_string=self.phrase, _verbose=True, _limit=self.limit)
         zerodaytoday.findExploits()
         self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
+
+    def test_securityfocus(self):
+        securityfocus = SecurityFocus(_search_string=self.phrase, _verbose=True, _limit=self.limit)
+        securityfocus.findExploits()
+        self.assertGreater(len(securityfocus.exploits), 0, 'SecurityFocus could not find any Dirty COW exploit')
