@@ -1,8 +1,10 @@
 # coding=utf-8
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 from requests import Session
 
+from untitled import Exploit
 from .Searcher import Searcher
 
 
@@ -11,7 +13,7 @@ class SecurityFocus(Searcher):
         self.url = 'http://www.securityfocus.com{}'
         self.search_url = self.url.format('/bid')
 
-        self.description = 'Searches packetstormsecurity.com for exploits'
+        self.description = 'Searches securityfocus.com for exploits'
 
     def findExploitsByCVE(self):
         session = Session()
@@ -21,10 +23,14 @@ class SecurityFocus(Searcher):
         content = response.content
         soup = BeautifulSoup(content, 'html.parser')
         table = soup.find_all('div', style='padding: 4px;')
-        i = 0
-        for child in table[0].descendants:
-            print('{}: {}'.format(i, child))
-            i += 1
+
+        for idx in range(0, len(table[0].contents), 11):
+            exploit = Exploit()
+            exploit.cve = self.cve
+            exploit.desc = table[0].contents[idx+1].text
+            exploit.date = datetime.strptime(table[0].contents[idx+4].text, "%Y-%m-%d")
+            exploit.url = table[0].contents[idx+7].text
+            self.exploits.append(exploit)
 
     def findExploitsByString(self):
         pass
