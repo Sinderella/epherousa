@@ -31,6 +31,7 @@ class Google(object):
 
         results = soup.find_all('div', class_='g')
         google_results = []
+        # TODO: currently retrieve only first page
         for result in results:
             title = result.a.text
             url = result.cite.text
