@@ -10,8 +10,8 @@ import threading
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
-from .models import Exploit
-from .searchers import *
+from .models.exploit import Exploit
+from .searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 
 
 def parse_args():
@@ -30,8 +30,8 @@ def parse_args():
     arg_parser.add_argument("-p", "--phrase", action="store_true",
                             help="Force interpreting the search argument as a search string rather than a CVE")
     arg_parser.add_argument("-l", "--limit", type=int, default=5,
-                            help="Limit the results of the exploits returned for each Scanner. Default value is set to "
-                                 "0 for no limit.")
+                            help="Limit the results of the exploits returned for each Scanner. Default value is set to"
+                                 " 0 for no limit.")
 
     return arg_parser.parse_args()
 
@@ -57,7 +57,7 @@ def main():
     log.debug("Arguments: {}".format(args))
 
     # Construct the list of searchers to use
-    searcher_classes = [ExploitDB, PacketStorm, ZeroDayToday]  # Keep alphabetical to make life easier
+    searcher_classes = [ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday]  # Keep alphabetical to make life easier
 
     if args.enable:
         enable_regexes = args.enable.split(',')
