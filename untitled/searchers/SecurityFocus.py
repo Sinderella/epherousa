@@ -12,6 +12,7 @@ from .Searcher import Searcher
 
 class SecurityFocus(Searcher):
     def setup(self):
+        super(SecurityFocus, self).setup()
         self.url = 'http://www.securityfocus.com{}'
         self.search_url = self.url.format('/bid')
 
