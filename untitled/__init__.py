@@ -97,9 +97,9 @@ def main():
     # wait for each thread until all done
     [thread.join() for thread in threads]
 
-    Exploit.calculateWidths(searcher_list)
-    Exploit.printHeader()
+    Exploit.calculate_widths(searcher_list)
+    Exploit.print_header()
     for s in searcher_list:
         s.printExploits()
 
-    Exploit.printFooter()
+    Exploit.print_footer()
