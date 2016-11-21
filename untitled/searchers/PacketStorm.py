@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 import re
-from datetime import datetime
-
 import requests
+from datetime import datetime
 from lxml import html
 
 from .Searcher import Searcher
@@ -79,7 +78,7 @@ class PacketStorm(Searcher):
                 link = link[0]
             else:
                 self.log.warn("PacketStorm: Failed to find url")
-            link = self.url.rstrip("/") + link
+            link = self.url.rstrip('/') + link[0:link.rfind('/')]
 
             exploit = Exploit(self.cve)
             exploit.desc = desc
