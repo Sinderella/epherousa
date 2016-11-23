@@ -35,6 +35,8 @@ class Google(object):
             google_results = []
             # TODO: currently retrieve only first page
             for result in results:
+                if result.a is None:
+                    continue
                 title = result.a.text
                 url = result.cite.text
 

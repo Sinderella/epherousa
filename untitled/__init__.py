@@ -29,7 +29,7 @@ def parse_args():
     arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging.")
     arg_parser.add_argument("-p", "--phrase", action="store_true",
                             help="Force interpreting the search argument as a search string rather than a CVE")
-    arg_parser.add_argument("-l", "--limit", type=int, default=5,
+    arg_parser.add_argument("-l", "--limit", type=int, default=10,
                             help="Limit the results of the exploits returned for each Scanner. Default value is set to"
                                  " 0 for no limit.")
 

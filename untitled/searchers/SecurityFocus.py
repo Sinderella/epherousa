@@ -13,6 +13,16 @@ class SecurityFocus(Searcher):
     _SEARCH_URL = _URL.format('/bid')
     _DESCRIPTION = 'Searches securityfocus.com for exploits'
 
+    @staticmethod
+    def _format_cve(cve):
+        if len(cve) <= 13:
+            return cve
+
+        tmp = cve[0:13]
+        for i in range(13, len(cve), 13):
+            tmp += ',{}'.format(cve[i:i + 13])
+        return tmp
+
     def find_exploits_by_cve(self):
         self.log.debug('Posting search form: {} with {}'.format(self._SEARCH_URL, self.cve))
         response = self.session.post(self._SEARCH_URL, data={'CVE': self.cve, 'op': 'display_list', 'c': 12})
@@ -58,6 +68,8 @@ class SecurityFocus(Searcher):
                     clean_url = 'http://' + result.url
                 else:
                     clean_url = 'http://' + result.url[0:result.url.rfind('/')]
+                if any(clean_url == exploit.url for exploit in self.exploits):
+                    continue
                 # retrieving more info (CVE/date)
                 response = session.get(clean_url)
                 content = response.content
@@ -80,7 +92,7 @@ class SecurityFocus(Searcher):
                         pass
                 exploit = Exploit()
                 if cve:
-                    exploit.cve = cve
+                    exploit.cve = self._format_cve(cve)
                 if date:
                     exploit.date = date
                 exploit.desc = title
