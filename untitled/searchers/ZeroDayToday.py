@@ -9,22 +9,19 @@ from .common import Searcher, Exploit
 
 
 class ZeroDayToday(Searcher):
-    def setup(self):
-        super(ZeroDayToday, self).setup()
-        self.name = "0day.today"
-        self.url = "http://0day.today/"
-        self.description = "Searches 0day.today"
+    _URL = 'http://0day.today{}'
+    _DESCRIPTION = 'Searches 0day.today'
 
     def find_exploits_by_cve(self):
         # It looks like a lot of stuff on 0day.today might not be tagged properly with CVEs
         # For now using this method, though may just use normal text search in the future
 
-        search_url = "http://0day.today/search?search_request=&search_type=1&search_in_text=on&category=-1" \
-                     "&platform=-1&price_from=0&price_to=-1&author_login=&cve=" + self.cve
+        search_url = self._URL.format('/search?search_request=&search_type=1&search_in_text=on&category=-1" \
+                     "&platform=-1&price_from=0&price_to=-1&author_login=&cve=" + self.cve')
         self.find_exploits_from_url(search_url)
 
     def find_exploits_by_string(self):
-        search_url = "http://0day.today/search?search_request=" + self.search_string
+        search_url = self._URL.format('/search?search_request=' + self.search_string)
         self.find_exploits_from_url(search_url)
 
     def find_exploits_from_url(self, search_url):
@@ -60,7 +57,7 @@ class ZeroDayToday(Searcher):
 
                 link = desc_box.xpath("./@href")
                 if len(link) > 0:
-                    link = self.url.rstrip("/") + link[0]
+                    link = self._URL.format('/') + link[0]
                 else:
                     self.log.warn("0day.today: Failed to find URL")
                     continue

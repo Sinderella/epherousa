@@ -10,10 +10,8 @@ from .common import Searcher, Exploit
 
 
 class PacketStorm(Searcher):
-    def setup(self):
-        super(PacketStorm, self).setup()
-        self.url = "https://packetstormsecurity.com/"
-        self.description = "Searches packetstormsecurity.com for exploits"
+    _URL = 'https://packetstormsecurity.com{}'
+    _DESCRIPTION = "Searches packetstormsecurity.com for exploits"
 
     def find_exploits_by_cve(self):
         # Packet storm has no way to specifically search for CVEs, so just search by string for all of them
@@ -77,7 +75,7 @@ class PacketStorm(Searcher):
                 link = link[0]
             else:
                 self.log.warn("PacketStorm: Failed to find url")
-            link = self.url.rstrip('/') + link[0:link.rfind('/')]
+            link = self._URL.format('') + link[0:link.rfind('/')]
 
             exploit = Exploit(self.cve)
             exploit.desc = desc
@@ -86,8 +84,8 @@ class PacketStorm(Searcher):
             self.exploits.append(exploit)
 
     def get_page_tree(self, page_number):
-        search_url = "https://packetstormsecurity.com/search/files/page" + str(
-            page_number) + "/search/?s=files&q=" + self.search_string
+        search_url = self._URL.format('/search/files/page' + str(page_number) +
+                                      '/search/?s=files&q=' + self.search_string)
         results_page = requests.get(search_url)
         self.log.info('Requesting {}'.format(search_url))
         return html.fromstring(results_page.content)

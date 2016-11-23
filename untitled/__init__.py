@@ -89,7 +89,7 @@ def main():
 
     threads = []
     for s in searcher_list:
-        new_thread = threading.Thread(target=s.findExploits)
+        new_thread = threading.Thread(target=s.find_exploits)
         new_thread.start()
         threads.append(new_thread)
         log.notice("Spawned a thread for searching at {}".format(s))
@@ -100,6 +100,6 @@ def main():
     Exploit.calculate_widths(searcher_list)
     Exploit.print_header()
     for s in searcher_list:
-        s.printExploits()
+        s.print_exploits()
 
     Exploit.print_footer()

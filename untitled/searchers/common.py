@@ -10,9 +10,7 @@ class Searcher(object):
     """A template class for the exploit searchers"""
 
     def __init__(self, _cve="", _search_string="", _verbose=False, _limit=0):
-        self.url = ""
         self.exploits = []
-        self.description = ""
 
         self.cve = _cve
         self.search_string = _search_string

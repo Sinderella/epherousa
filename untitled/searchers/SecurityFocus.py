@@ -9,17 +9,14 @@ from .common import Searcher, Exploit
 
 
 class SecurityFocus(Searcher):
-    def setup(self):
-        super(SecurityFocus, self).setup()
-        self.url = 'http://www.securityfocus.com{}'
-        self.search_url = self.url.format('/bid')
-
-        self.description = 'Searches securityfocus.com for exploits'
+    _URL = 'http://www.securityfocus.com{}'
+    _SEARCH_URL = _URL.format('/bid')
+    _DESCRIPTION = 'Searches securityfocus.com for exploits'
 
     def find_exploits_by_cve(self):
         session = Session()
-        self.log.debug('Posting search form: {} with {}'.format(self.search_url, self.cve))
-        response = session.post(self.search_url, data={'CVE': self.cve, 'op': 'display_list', 'c': 12},
+        self.log.debug('Posting search form: {} with {}'.format(self._SEARCH_URL, self.cve))
+        response = session.post(self._SEARCH_URL, data={'CVE': self.cve, 'op': 'display_list', 'c': 12},
                                 headers={'User-Agent': 'Mozilla/5.0'})
 
         content = response.content

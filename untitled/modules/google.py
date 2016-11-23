@@ -2,9 +2,8 @@
 from __future__ import unicode_literals
 
 import re
-from datetime import datetime
-
 from bs4 import BeautifulSoup
+from datetime import datetime
 from requests import Session
 
 from untitled.logger import setup_logger
@@ -12,18 +11,18 @@ from untitled.models.googleresult import GoogleResult
 
 
 class Google(object):
+    _BASE_URL = 'https://www.google.co.uk{}'
+    _SEARCH_URL = _BASE_URL.format('/search?q={}')
+    _SITE_PAT = 'site:{} {}'
+
     def __init__(self, called_by=None):
         self.session = Session()
         self.log = setup_logger('{} Google'.format(called_by) if called_by else 'Google')
 
-        self.base_url = 'https://www.google.co.uk{}'
-        self.search_url = self.base_url.format('/search?q={}')
-        self.site_pat = 'site:{} {}'
-
     def site(self, site_url, keyword):
         clean_site_url = re.sub('http(s)://', '', site_url)
-        query = self.site_pat.format(clean_site_url, keyword)
-        search_url = self.search_url.format(query)
+        query = self._SITE_PAT.format(clean_site_url, keyword)
+        search_url = self._SEARCH_URL.format(query)
 
         response = self.session.get(search_url)
         content = response.content
