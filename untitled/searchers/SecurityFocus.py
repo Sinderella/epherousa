@@ -47,7 +47,7 @@ class SecurityFocus(Searcher):
 
     def find_exploits_by_string(self):
         google = Google()
-        google_results = google.site(self.url.format(''), self.search_string)
+        google_results = google.site(self._URL.format(''), self.search_string)
 
         session = Session()
         # TODO: currently does not respect limit, but retrieve only first page
