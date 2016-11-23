@@ -1,13 +1,11 @@
 # coding=utf-8
 import re
-from datetime import datetime
-
 from bs4 import BeautifulSoup
+from datetime import datetime
 from requests import Session
 
-from untitled import Exploit
 from untitled.modules.google import Google
-from .Searcher import Searcher
+from .common import Searcher, Exploit
 
 
 class SecurityFocus(Searcher):

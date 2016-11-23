@@ -10,8 +10,8 @@ import threading
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
-from .models.exploit import Exploit
 from .searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
+from .searchers.common import Exploit
 
 
 def parse_args():

@@ -1,13 +1,11 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from datetime import datetime
-
 import requests
+from datetime import datetime
 from lxml import html
 
-from .Searcher import Searcher
-from ..models.exploit import Exploit
+from .common import Searcher, Exploit
 
 
 class ZeroDayToday(Searcher):
