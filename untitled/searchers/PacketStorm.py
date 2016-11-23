@@ -15,13 +15,13 @@ class PacketStorm(Searcher):
         self.url = "https://packetstormsecurity.com/"
         self.description = "Searches packetstormsecurity.com for exploits"
 
-    def findExploitsByCVE(self):
+    def find_exploits_by_cve(self):
         # Packet storm has no way to specifically search for CVEs, so just search by string for all of them
         self.search_string = self.cve
-        self.findExploitsByString()
+        self.find_exploits_by_string()
 
-    def findExploitsByString(self):
-        results_tree = self.getPageTree(1)
+    def find_exploits_by_string(self):
+        results_tree = self.get_page_tree(1)
 
         # Check if any results were returned
         if len(results_tree.xpath("//h1[text()='No Results Found']")) != 0:
@@ -45,7 +45,7 @@ class PacketStorm(Searcher):
         results_files = results_tree.xpath("//dl[contains(@class, 'file')]")
         for i in range(2, num_pages + 1):
             if len(results_files) < self.limit:
-                results_tree = self.getPageTree(i)
+                results_tree = self.get_page_tree(i)
                 results_files.extend(results_tree.xpath("//dl[contains(@class, 'file')]"))
             else:
                 self.log.notice('Limit reached (limit: {})'.format(self.limit))
@@ -85,7 +85,7 @@ class PacketStorm(Searcher):
             exploit.url = link
             self.exploits.append(exploit)
 
-    def getPageTree(self, page_number):
+    def get_page_tree(self, page_number):
         search_url = "https://packetstormsecurity.com/search/files/page" + str(
             page_number) + "/search/?s=files&q=" + self.search_string
         results_page = requests.get(search_url)

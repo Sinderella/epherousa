@@ -32,21 +32,21 @@ class Searcher(object):
         """Called at the end of init to make initial setup easier for searchers"""
         self.log.debug('Setting up searcher: {}'.format(self.__str__()))
 
-    def findExploits(self):
+    def find_exploits(self):
         """Update self.exploits after searching"""
         if self.cve != "":
-            self.findExploitsByCVE()
+            self.find_exploits_by_cve()
         else:
-            self.findExploitsByString()
+            self.find_exploits_by_string()
         self.log.debug('Found {} exploits'.format(len(self.exploits)))
 
-    def findExploitsByCVE(self):
+    def find_exploits_by_cve(self):
         """Searches the database using self.cve"""
 
-    def findExploitsByString(self):
+    def find_exploits_by_string(self):
         """Searches the database using self.search string"""
 
-    def printExploits(self):
+    def print_exploits(self):
         """Print the contents of self.exploits, only up to the limit of the searcher"""
         if self.limit == 0:
             for e in self.exploits:

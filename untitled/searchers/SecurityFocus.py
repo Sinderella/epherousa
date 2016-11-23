@@ -16,7 +16,7 @@ class SecurityFocus(Searcher):
 
         self.description = 'Searches securityfocus.com for exploits'
 
-    def findExploitsByCVE(self):
+    def find_exploits_by_cve(self):
         session = Session()
         self.log.debug('Posting search form: {} with {}'.format(self.search_url, self.cve))
         response = session.post(self.search_url, data={'CVE': self.cve, 'op': 'display_list', 'c': 12},
@@ -48,7 +48,7 @@ class SecurityFocus(Searcher):
                 'Could not find a list, web layout may have changed. Please create an issue on the project. '
                 '{}'.format(e))
 
-    def findExploitsByString(self):
+    def find_exploits_by_string(self):
         google = Google()
         google_results = google.site(self.url.format(''), self.search_string)
 

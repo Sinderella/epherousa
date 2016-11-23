@@ -15,19 +15,19 @@ class ZeroDayToday(Searcher):
         self.url = "http://0day.today/"
         self.description = "Searches 0day.today"
 
-    def findExploitsByCVE(self):
+    def find_exploits_by_cve(self):
         # It looks like a lot of stuff on 0day.today might not be tagged properly with CVEs
         # For now using this method, though may just use normal text search in the future
 
         search_url = "http://0day.today/search?search_request=&search_type=1&search_in_text=on&category=-1" \
                      "&platform=-1&price_from=0&price_to=-1&author_login=&cve=" + self.cve
-        self.findExploitsFromURL(search_url)
+        self.find_exploits_from_url(search_url)
 
-    def findExploitsByString(self):
+    def find_exploits_by_string(self):
         search_url = "http://0day.today/search?search_request=" + self.search_string
-        self.findExploitsFromURL(search_url)
+        self.find_exploits_from_url(search_url)
 
-    def findExploitsFromURL(self, search_url):
+    def find_exploits_from_url(self, search_url):
         self.log.info('Requesting {}'.format(search_url))
         search_page = requests.post(search_url, data={"agree": "Yes%2C+I+agree"}, allow_redirects=True,
                                     headers={"Referer": search_url})
