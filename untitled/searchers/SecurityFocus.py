@@ -14,17 +14,16 @@ class SecurityFocus(Searcher):
     _DESCRIPTION = 'Searches securityfocus.com for exploits'
 
     def find_exploits_by_cve(self):
-        session = Session()
         self.log.debug('Posting search form: {} with {}'.format(self._SEARCH_URL, self.cve))
-        response = session.post(self._SEARCH_URL, data={'CVE': self.cve, 'op': 'display_list', 'c': 12},
-                                headers={'User-Agent': 'Mozilla/5.0'})
+        response = self.session.post(self._SEARCH_URL, data={'CVE': self.cve, 'op': 'display_list', 'c': 12})
 
         content = response.content
         soup = BeautifulSoup(content, 'html.parser')
         # retrieve table with style, it has no class or ID to identify
         table = soup.find_all('div', style='padding: 4px;')
         if len(table) == 0:
-            self.log.error('Could not find a list, web layout may have changed. Please create an issue on the project.')
+            self.log.error(
+                'Could not find a list, web layout may have changed. Please create an issue on the project.')
             raise RuntimeError(
                 'Could not find a list, web layout may have changed. Please create an issue on the project.')
 

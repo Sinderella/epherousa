@@ -2,16 +2,21 @@
 from __future__ import unicode_literals, print_function
 
 from datetime import datetime
+from requests import ConnectionError
+from requests import Session
+from requests import Timeout
 
 from untitled.logger import setup_logger
 
 
 class Searcher(object):
     """A template class for the exploit searchers"""
+    _USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0'}
 
     def __init__(self, _cve="", _search_string="", _verbose=False, _limit=0):
         self.exploits = []
 
+        self.session = self._setup_session()
         self.cve = _cve
         self.search_string = _search_string
         self.verbose = _verbose
@@ -30,13 +35,25 @@ class Searcher(object):
         """Called at the end of init to make initial setup easier for searchers"""
         self.log.debug('Setting up searcher: {}'.format(self.__str__()))
 
+    def _setup_session(self):
+        session = Session()
+        session.headers.update(self._USER_AGENT)
+        return session
+
     def find_exploits(self):
         """Update self.exploits after searching"""
-        if self.cve != "":
-            self.find_exploits_by_cve()
-        else:
-            self.find_exploits_by_string()
-        self.log.debug('Found {} exploits'.format(len(self.exploits)))
+        try:
+            if self.cve != "":
+                self.find_exploits_by_cve()
+            else:
+                self.find_exploits_by_string()
+            self.log.debug('Found {} exploits'.format(len(self.exploits)))
+        except Timeout as e:
+            self.log.error('Timed out, {} is down, try again later...: {}'.format(self, e))
+        except ConnectionError as e:
+            self.log.error('{} is down, check if the site is not taken down: {}'.format(self, e))
+        except RuntimeError as e:
+            self.log.error('Something has gone wrong: {}'.format(e))
 
     def find_exploits_by_cve(self):
         """Searches the database using self.cve"""

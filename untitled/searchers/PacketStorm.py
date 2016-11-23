@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import re
-import requests
 from datetime import datetime
 from lxml import html
 
@@ -86,6 +85,6 @@ class PacketStorm(Searcher):
     def get_page_tree(self, page_number):
         search_url = self._URL.format('/search/files/page' + str(page_number) +
                                       '/search/?s=files&q=' + self.search_string)
-        results_page = requests.get(search_url)
+        results_page = self.session.get(search_url)
         self.log.info('Requesting {}'.format(search_url))
         return html.fromstring(results_page.content)

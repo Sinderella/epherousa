@@ -1,7 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import requests
 from datetime import datetime
 from lxml import html
 
@@ -26,8 +25,8 @@ class ZeroDayToday(Searcher):
 
     def find_exploits_from_url(self, search_url):
         self.log.info('Requesting {}'.format(search_url))
-        search_page = requests.post(search_url, data={"agree": "Yes%2C+I+agree"}, allow_redirects=True,
-                                    headers={"Referer": search_url})
+        search_page = self.session.post(search_url, data={"agree": "Yes%2C+I+agree"}, allow_redirects=True,
+                                        headers={"Referer": search_url})
         search_tree = html.fromstring(search_page.content)
 
         exploit_rows = search_tree.xpath("//div[@class='ExploitTableContent']")
