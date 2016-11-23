@@ -10,12 +10,15 @@ class TestSearcherCVE(unittest.TestCase):
     def setUp(self):
         # Dirty COW CVE
         self.cve = 'CVE-2016-5195'
+        # just for exploitdb
+        self.exploitdb_cve = 'CVE-2016-5840'
         self.limit = 5
 
     def test_exploitdb(self):
-        exploitdb = ExploitDB(_cve=self.cve, _verbose=True, _limit=self.limit)
+        exploitdb = ExploitDB(_cve=self.exploitdb_cve, _verbose=True, _limit=self.limit)
         exploitdb.find_exploits()
-        self.assertGreater(len(exploitdb.exploits), 0, 'Exploit-db could not find any Dirty COW exploit')
+        self.assertGreater(len(exploitdb.exploits), 0,
+                           'Exploit-db could not find any {} exploit'.format(self.exploitdb_cve))
 
     def test_packetstorm(self):
         packetstorm = PacketStorm(_cve=self.cve, _verbose=True, _limit=self.limit)
