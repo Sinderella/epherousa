@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals, print_function
 
+import re
 from datetime import datetime
 from requests import ConnectionError
 from requests import Session
@@ -12,6 +13,7 @@ from untitled.logger import setup_logger
 class Searcher(object):
     """A template class for the exploit searchers"""
     _USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0'}
+    _CVE_PATTERN = re.compile('CVE-\d{4}-\d{4,7}')
 
     def __init__(self, _cve="", _search_string="", _verbose=False, _limit=0):
         self.exploits = []

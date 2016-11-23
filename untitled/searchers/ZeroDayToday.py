@@ -56,7 +56,7 @@ class ZeroDayToday(Searcher):
 
                 link = desc_box.xpath("./@href")
                 if len(link) > 0:
-                    link = self._URL.format('/') + link[0]
+                    link = self._URL.format(link[0])
                 else:
                     self.log.warn("0day.today: Failed to find URL")
                     continue
