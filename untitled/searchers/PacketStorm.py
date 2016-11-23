@@ -78,7 +78,7 @@ class PacketStorm(Searcher):
 
             # Get CVE
             response = self.session.get(link)
-            content = response.content
+            content = response.content.decode('utf-8')
             cve = self._CVE_PATTERN.search(content)
             cve = cve.group(0)
 
