@@ -16,6 +16,12 @@ setup(
     # url='',
     packages=[
         'epherousa',
+        'epherousa.models',
+        'epherousa.modules',
         'epherousa.searchers',
+    ],
+    scripts=[
+        'bin/ephe',
+        'bin/epherousa'
     ]
 )
