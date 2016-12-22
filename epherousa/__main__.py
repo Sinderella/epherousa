@@ -15,6 +15,6 @@ if __name__ == '__main__':
         sys.setdefaultencoding('utf-8')
     except NameError as e:
         pass
-    from untitled import main
+    from epherousa import main
 
     main()

@@ -3,7 +3,7 @@
 
 import unittest
 
-from untitled.searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
+from epherousa.searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 
 
 class TestSearcherCVE(unittest.TestCase):

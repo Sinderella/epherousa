@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import untitled
+import epherousa
 
 if __name__ == '__main__':
-    untitled.main()
+    epherousa.main()

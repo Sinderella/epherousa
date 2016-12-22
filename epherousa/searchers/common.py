@@ -7,7 +7,7 @@ from requests import ConnectionError
 from requests import Session
 from requests import Timeout
 
-from untitled.logger import setup_logger
+from epherousa.logger import setup_logger
 
 
 class Searcher(object):

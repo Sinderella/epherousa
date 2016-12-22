@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from requests import Session
 
-from untitled.modules.google import Google
+from epherousa.modules.google import Google
 from .common import Searcher, Exploit
 
 

@@ -7,8 +7,8 @@ from datetime import datetime
 from requests import Session
 from requests import Timeout
 
-from untitled.logger import setup_logger
-from untitled.models.googleresult import GoogleResult
+from epherousa.logger import setup_logger
+from epherousa.models.googleresult import GoogleResult
 
 
 class Google(object):
