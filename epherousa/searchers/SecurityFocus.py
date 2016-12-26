@@ -47,7 +47,7 @@ class SecurityFocus(Searcher):
                 exploit.date = datetime.strptime(table[0].contents[idx + 4].text, "%Y-%m-%d")
                 exploit.url = table[0].contents[idx + 7].text
                 self.exploits.append(exploit)
-        except AttributeError as e:
+        except (AttributeError, IndexError) as e:
             self.log.error('Could not find an attribute, web layout may have changed. Please create an issue on '
                            'the project. {}'.format(e))
             raise RuntimeError(
