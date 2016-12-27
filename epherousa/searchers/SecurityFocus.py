@@ -47,13 +47,15 @@ class SecurityFocus(Searcher):
                 exploit.date = datetime.strptime(table[0].contents[idx + 4].text, "%Y-%m-%d")
                 exploit.url = table[0].contents[idx + 7].text
                 self.exploits.append(exploit)
-        except (AttributeError, IndexError) as e:
+        except AttributeError as e:
             self.log.error('Could not find an attribute, web layout may have changed. Please create an issue on '
                            'the project. {}'.format(e))
             raise RuntimeError(
                 'Could not find a list, web layout may have changed. Please create an issue on the project. '
                 '{}'.format(e))
-
+        except IndexError as e:
+            self.log.notice('SecurityFocus returned no results.')
+            
     def find_exploits_by_string(self):
         google = Google()
         google_results = google.site(self._URL.format(''), self.search_string)
