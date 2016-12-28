@@ -11,9 +11,12 @@ debug – for debug messages
 
 source: https://logbook.readthedocs.io/en/stable/quickstart.html
 """
+import colorama
 import sys
+from colorama import Fore, Style
 
 from logbook import Logger, StreamHandler, CRITICAL, ERROR, WARNING, INFO
+from logbook import NOTICE
 from logbook.more import ColorizingStreamHandlerMixin
 
 
@@ -21,26 +24,30 @@ class ColourizingMixin(ColorizingStreamHandlerMixin):
     def get_color(self, record):
         """Returns the color for this record."""
         if record.level == CRITICAL:
-            return 'darkred'
+            return Fore.RED + Style.DIM
         elif record.level == ERROR:
-            return 'red'
+            return Fore.RED + Style.BRIGHT
         elif record.level == WARNING:
-            return 'yellow'
-        elif record.level >= INFO:
-            return 'lightgray'
-        return 'lightgray'
+            return Fore.YELLOW + Style.BRIGHT
+        elif record.level == NOTICE:
+            return Fore.CYAN + Style.BRIGHT
+        elif record.level == INFO:
+            return Fore.WHITE + Style.BRIGHT
+        return Fore.WHITE
+
+    def format(self, record):
+        rv = super(ColourizingMixin, self).format(record)
+        if self.should_colorize(record):
+            colour = self.get_color(record)
+            if colour:
+                rv = colour + rv + Style.RESET_ALL
+        return rv
 
 
 class ColourHandler(ColourizingMixin, StreamHandler):
     def __init__(self, *args, **kwargs):
         super(ColourHandler, self).__init__(*args, **kwargs)
-
-        try:
-            import colorama
-        except ImportError:
-            pass
-        else:
-            colorama.init()
+        colorama.init(autoreset=True)
 
 
 def setup_logger(logger_name):
