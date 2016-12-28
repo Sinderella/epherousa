@@ -20,7 +20,7 @@ from logbook import NOTICE
 from logbook.more import ColorizingStreamHandlerMixin
 
 
-class ColourizingMixin(ColorizingStreamHandlerMixin):
+class ColourisingMixin(ColorizingStreamHandlerMixin):
     def get_color(self, record):
         """Returns the color for this record."""
         if record.level == CRITICAL:
@@ -36,7 +36,7 @@ class ColourizingMixin(ColorizingStreamHandlerMixin):
         return Fore.WHITE
 
     def format(self, record):
-        rv = super(ColourizingMixin, self).format(record)
+        rv = super(ColourisingMixin, self).format(record)
         if self.should_colorize(record):
             colour = self.get_color(record)
             if colour:
@@ -44,7 +44,7 @@ class ColourizingMixin(ColorizingStreamHandlerMixin):
         return rv
 
 
-class ColourHandler(ColourizingMixin, StreamHandler):
+class ColourHandler(ColourisingMixin, StreamHandler):
     def __init__(self, *args, **kwargs):
         super(ColourHandler, self).__init__(*args, **kwargs)
         colorama.init(autoreset=True)
