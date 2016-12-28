@@ -53,7 +53,9 @@ class SecurityFocus(Searcher):
             raise RuntimeError(
                 'Could not find a list, web layout may have changed. Please create an issue on the project. '
                 '{}'.format(e))
-
+        except IndexError as e:
+            self.log.notice('SecurityFocus returned no results.')
+            
     def find_exploits_by_string(self):
         google = Google()
         google_results = google.site(self._URL.format(''), self.search_string)
