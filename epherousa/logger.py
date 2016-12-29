@@ -48,10 +48,10 @@ class ColourHandler(ColourisingMixin, StreamHandler):
         super(ColourHandler, self).__init__(*args, **kwargs)
         colorama.init(autoreset=True)
 
-
 def setup_logger(logger_name):
     handler = ColourHandler(sys.stdout)
-    handler.format_string = '[{record.time:%H:%M:%S}] {record.level_name}: {record.channel}: {record.message}'
+    print logger_name
+    handler.format_string = '{record.time:%H:%M:%S} [{record.level_name[0]}] {record.channel}: {record.message}'
     handler.push_thread()
     log = Logger(logger_name)
     return log
