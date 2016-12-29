@@ -52,17 +52,9 @@ def filter_class_list(class_list, regex_list):
 
 def main():
     args = parse_args()
-    log = setup_logger('epherousa')
+    log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
     log.debug("Arguments: {}".format(args))
-
-    # TODO: remove these when done testing the colours
-    log.debug('test')
-    log.info('test')
-    log.notice('test')
-    log.warning('test')
-    log.error('test')
-    log.critical('test')
 
     # Construct the list of searchers to use
     searcher_classes = [ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday]  # Keep alphabetical to make life easier
