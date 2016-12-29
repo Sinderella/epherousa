@@ -14,9 +14,8 @@ source: https://logbook.readthedocs.io/en/stable/quickstart.html
 import colorama
 import sys
 from colorama import Fore, Style
-
-from logbook import Logger, StreamHandler, CRITICAL, ERROR, WARNING, INFO
-from logbook import NOTICE
+from logbook import Logger, StreamHandler
+from logbook import CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG
 from logbook.more import ColorizingStreamHandlerMixin
 
 
@@ -28,11 +27,11 @@ class ColourisingMixin(ColorizingStreamHandlerMixin):
         elif record.level == ERROR:
             return Fore.RED + Style.BRIGHT
         elif record.level == WARNING:
-            return Fore.YELLOW + Style.BRIGHT
+            return Fore.YELLOW + Style.DIM
         elif record.level == NOTICE:
             return Fore.CYAN + Style.BRIGHT
-        elif record.level == INFO:
-            return Fore.WHITE + Style.BRIGHT
+        elif record.level == DEBUG:
+            return Fore.GREEN + Style.BRIGHT
         return Fore.WHITE
 
     def format(self, record):
