@@ -36,7 +36,7 @@ class ColourisingMixin(ColorizingStreamHandlerMixin):
         return Fore.WHITE
 
     def format(self, record):
-        rv = super(ColourisingMixin, self).format(record)
+        rv = super(ColorizingStreamHandlerMixin, self).format(record)
         if self.should_colorize(record):
             colour = self.get_color(record)
             if colour:
