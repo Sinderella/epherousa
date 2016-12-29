@@ -38,8 +38,7 @@ class ColourisingMixin(ColorizingStreamHandlerMixin):
         rv = super(ColorizingStreamHandlerMixin, self).format(record)
         if self.should_colorize(record):
             colour = self.get_color(record)
-            if colour:
-                rv = colour + rv + Style.RESET_ALL
+            rv = colour + rv + Style.RESET_ALL
         return rv
 
 
@@ -50,7 +49,6 @@ class ColourHandler(ColourisingMixin, StreamHandler):
 
 def setup_logger(logger_name):
     handler = ColourHandler(sys.stdout)
-    print logger_name
     handler.format_string = '{record.time:%H:%M:%S} [{record.level_name[0]}] {record.channel}: {record.message}'
     handler.push_thread()
     log = Logger(logger_name)
