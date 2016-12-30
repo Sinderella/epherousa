@@ -52,7 +52,7 @@ def filter_class_list(class_list, regex_list):
 
 def main():
     args = parse_args()
-    log = setup_logger('epherousa')
+    log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
     log.debug("Arguments: {}".format(args))
 

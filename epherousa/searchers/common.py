@@ -24,6 +24,8 @@ class Searcher(object):
         self.verbose = _verbose
         self.limit = _limit
         self.log = setup_logger(self.__str__())
+        if self.verbose:
+            self.log.level = self.verbose
 
         self.setup()
 
