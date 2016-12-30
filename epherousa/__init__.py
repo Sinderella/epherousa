@@ -13,6 +13,7 @@ from .logger import setup_logger
 from .searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 from .searchers.common import Exploit
 
+from version import __version__
 
 def parse_args():
     # Deal with argument parsing
@@ -32,6 +33,8 @@ def parse_args():
     arg_parser.add_argument("-l", "--limit", type=int, default=10,
                             help="Limit the results of the exploits returned for each Scanner. Default value is set to"
                                  " 0 for no limit.")
+    arg_parser.add_argument("-q", "--quiet", action="store_true",
+                            help="Do not display ephe's banner.")
 
     return arg_parser.parse_args()
 
@@ -48,6 +51,25 @@ def filter_class_list(class_list, regex_list):
             filtered_names.append(name)
 
     return [c for c in class_list if c.__name__ in filtered_names]
+
+
+def print_banner():
+        """Prints ephe's banner on startup"""
+        print("""
+                         .-""-.
+                        (___/\ \\
+                       ( |' ' ) )   """
+              + "\tEphe v" + __version__ +
+              """
+                     __) _\=_/  (
+                ____(__._ `  \   )
+              .(/8-.._.88,   ; (
+             /   /8.    `88., |  )
+  _.`'---.._/   /.8_ ____.'_| |_/
+'-'``'-._     /  | `-........'
+        `;-"`;  |"""
+        + 6*"\t" + "Dionach Ltd" + """
+          `'.__/""")
 
 
 def main():
@@ -67,6 +89,10 @@ def main():
         disable_regexes = args.disable.split(',')
         disabled_classes = filter_class_list(searcher_classes, disable_regexes)
         searcher_classes = [c for c in searcher_classes if c not in disabled_classes]
+
+    # print banner
+    if not args.quiet:
+        print_banner()
 
     # Actually do the searching
     log.info("Using searchers: " + str([s.__name__ for s in searcher_classes]))
