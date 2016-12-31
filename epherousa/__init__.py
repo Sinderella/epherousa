@@ -12,8 +12,8 @@ from logbook import NOTICE, DEBUG
 from .logger import setup_logger
 from .searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 from .searchers.common import Exploit
+from .version import __version__
 
-from version import __version__
 
 def parse_args():
     # Deal with argument parsing
@@ -54,21 +54,21 @@ def filter_class_list(class_list, regex_list):
 
 
 def print_banner():
-        """Prints ephe's banner on startup"""
-        print("""
+    """Prints ephe's banner on startup"""
+    print("""
                          .-""-.
                         (___/\ \\
                        ( |' ' ) )   """
-              + "\tEphe v" + __version__ +
-              """
-                     __) _\=_/  (
-                ____(__._ `  \   )
-              .(/8-.._.88,   ; (
-             /   /8.    `88., |  )
-  _.`'---.._/   /.8_ ____.'_| |_/
+          + "\tEphe v" + __version__ +
+          """
+                 __) _\=_/  (
+            ____(__._ `  \   )
+          .(/8-.._.88,   ; (
+         /   /8.    `88., |  )
+_.`'---.._/   /.8_ ____.'_| |_/
 '-'``'-._     /  | `-........'
-        `;-"`;  |"""
-        + 6*"\t" + "Dionach Ltd" + """
+    `;-"`;  |"""
+          + 6 * "\t" + "Dionach Ltd" + """
           `'.__/""")
 
 
