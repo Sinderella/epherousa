@@ -18,7 +18,7 @@ def parse_args():
     # Deal with argument parsing
     # maybe add these to an init class one day
     arg_parser = argparse.ArgumentParser(
-        description="Search mutltiple sources for exploits for CVEs or software versions")
+        description="Search multiple sources for exploits for CVEs or software versions")
     arg_parser.add_argument("cve", help="The cve to find exploits for.")
     arg_parser.add_argument("-d", "--disable",
                             help="Disable only these scanners. Input is interpreted as a series of comma-seperated "
