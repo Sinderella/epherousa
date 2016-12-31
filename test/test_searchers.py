@@ -3,7 +3,9 @@
 
 import unittest
 
-from epherousa.searchers import ExploitDB, PacketStorm, SecurityFocus
+from epherousa.searchers.ExploitDB import ExploitDB
+from epherousa.searchers.PacketStorm import PacketStorm
+from epherousa.searchers.SecurityFocus import SecurityFocus
 
 
 class TestSearcherCVE(unittest.TestCase):
