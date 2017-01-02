@@ -47,7 +47,7 @@ class Searcher(object):
     def find_exploits(self):
         """Update self.exploits after searching"""
         try:
-            if self.cve != "":
+            if not self.cve:
                 self.find_exploits_by_cve()
             else:
                 self.find_exploits_by_string()
