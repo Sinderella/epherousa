@@ -5,7 +5,10 @@ from __future__ import unicode_literals
 
 import argparse
 import re
+import signal
+import sys
 import threading
+from builtins import input
 
 from logbook import NOTICE, DEBUG
 
@@ -72,7 +75,17 @@ def print_banner():
           `'.__/""")
 
 
+def process_signal_exit(signum, stack):
+    choice = input('\nexit? [y/N]')
+    try:
+        if choice.lower().startswith('y'):
+            sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+
 def main():
+    signal.signal(signal.SIGINT, process_signal_exit)
     args = parse_args()
     log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
@@ -119,6 +132,8 @@ def main():
     threads = []
     for s in searcher_list:
         new_thread = threading.Thread(target=s.find_exploits)
+        # threads will exit if main thread exits
+        new_thread.daemon = True
         new_thread.start()
         threads.append(new_thread)
         log.notice("Spawned a thread for searching at {}".format(s))
