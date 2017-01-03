@@ -19,9 +19,9 @@ exclude_lines =
     # Don't complain if non-runnable code isn't run:
     if 0:
     if __name__ == .__main__.:
-    def main():
-    def print_banner():
-    def filter_class_list(class_list, regex_list):
-    def parse_args():
+    def main
+    def print_banner
+    def filter_class_list
+    def parse_args
 
 ignore_errors = True
