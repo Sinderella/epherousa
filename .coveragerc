@@ -1,0 +1,27 @@
+# taken from https://coverage.readthedocs.io/en/latest/config.html#syntax
+[run]
+branch = True
+
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+    self\.log\.debug
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+    def main():
+    def print_banner():
+    def filter_class_list(class_list, regex_list):
+    def parse_args():
+
+ignore_errors = True
