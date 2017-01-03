@@ -76,6 +76,13 @@ def main():
     args = parse_args()
     log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
+
+    # print banner
+    if not args.quiet:
+        print_banner()
+    else:
+        log.disable()
+
     log.debug("Arguments: {}".format(args))
 
     # Construct the list of searchers to use
@@ -89,10 +96,6 @@ def main():
         disable_regexes = args.disable.split(',')
         disabled_classes = filter_class_list(searcher_classes, disable_regexes)
         searcher_classes = [c for c in searcher_classes if c not in disabled_classes]
-
-    # print banner
-    if not args.quiet:
-        print_banner()
 
     # Actually do the searching
     log.info("Using searchers: " + str([s.__name__ for s in searcher_classes]))
@@ -108,7 +111,7 @@ def main():
     # Actually create the searchers
     limit = args.limit if args.limit else 0
     log.debug("Setting limit to {}".format(limit))
-    searcher_list = [searcher_class(_cve=cve, _search_string=phrase, _verbose=args.verbose, _limit=limit) for
+    searcher_list = [searcher_class(_cve=cve, _search_string=phrase, _args=args, _limit=limit) for
                      searcher_class
                      in searcher_classes]
     log.info("Setting {} searchers {}".format(len(searcher_list), searcher_list))
