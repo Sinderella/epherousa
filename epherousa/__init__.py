@@ -12,6 +12,7 @@ from logbook import NOTICE, DEBUG
 from .logger import setup_logger
 from .searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
 from .searchers.common import Exploit
+from .version import __version__
 
 
 def parse_args():
@@ -32,6 +33,8 @@ def parse_args():
     arg_parser.add_argument("-l", "--limit", type=int, default=10,
                             help="Limit the results of the exploits returned for each Scanner. Default value is set to"
                                  " 0 for no limit.")
+    arg_parser.add_argument("-q", "--quiet", action="store_true",
+                            help="Do not display ephe's banner.")
 
     return arg_parser.parse_args()
 
@@ -50,10 +53,36 @@ def filter_class_list(class_list, regex_list):
     return [c for c in class_list if c.__name__ in filtered_names]
 
 
+def print_banner():
+        """Prints ephe's banner on startup"""
+        print("""
+                         .-""-.
+                        (___/\ \\
+                       ( |' ' ) )   """
+              + "\tEphe v" + __version__ +
+              """
+                     __) _\=_/  (
+                ____(__._ `  \   )
+              .(/8-.._.88,   ; (
+             /   /8.    `88., |  )
+  _.`'---.._/   /.8_ ____.'_| |_/
+'-'``'-._     /  | `-........'
+        `;-"`;  |"""
+        + 6*"\t" + "Dionach Ltd" + """
+          `'.__/""")
+
+
 def main():
     args = parse_args()
     log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
+
+    # print banner
+    if not args.quiet:
+        print_banner()
+    else:
+        log.disable()
+
     log.debug("Arguments: {}".format(args))
 
     # Construct the list of searchers to use
@@ -82,7 +111,7 @@ def main():
     # Actually create the searchers
     limit = args.limit if args.limit else 0
     log.debug("Setting limit to {}".format(limit))
-    searcher_list = [searcher_class(_cve=cve, _search_string=phrase, _verbose=args.verbose, _limit=limit) for
+    searcher_list = [searcher_class(_cve=cve, _search_string=phrase, _args=args, _limit=limit) for
                      searcher_class
                      in searcher_classes]
     log.info("Setting {} searchers {}".format(len(searcher_list), searcher_list))
