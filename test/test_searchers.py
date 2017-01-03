@@ -3,7 +3,9 @@
 
 import unittest
 
-from epherousa.searchers import ExploitDB, PacketStorm, SecurityFocus, ZeroDayToday
+from epherousa.searchers.ExploitDB import ExploitDB
+from epherousa.searchers.PacketStorm import PacketStorm
+from epherousa.searchers.SecurityFocus import SecurityFocus
 
 
 class TestSearcherCVE(unittest.TestCase):
@@ -25,10 +27,10 @@ class TestSearcherCVE(unittest.TestCase):
         packetstorm.find_exploits()
         self.assertGreater(len(packetstorm.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
 
-    def test_zerodaytoday(self):
-        zerodaytoday = ZeroDayToday(_cve=self.cve, _limit=self.limit)
-        zerodaytoday.find_exploits()
-        self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
+    # def test_zerodaytoday(self):
+    #     zerodaytoday = ZeroDayToday(_cve=self.cve, _limit=self.limit)
+    #     zerodaytoday.find_exploits()
+    #     self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
 
     def test_securityfocus(self):
         securityfocus = SecurityFocus(_cve=self.cve, _limit=self.limit)
@@ -51,10 +53,10 @@ class TestSearcherPhrase(unittest.TestCase):
         packetstorm.find_exploits()
         self.assertGreater(len(packetstorm.exploits), 0, 'PacketStorm could not find any Dirty COW exploit')
 
-    def test_zerodaytoday(self):
-        zerodaytoday = ZeroDayToday(_search_string=self.phrase, _limit=self.limit)
-        zerodaytoday.find_exploits()
-        self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
+    # def test_zerodaytoday(self):
+    #     zerodaytoday = ZeroDayToday(_search_string=self.phrase, _limit=self.limit)
+    #     zerodaytoday.find_exploits()
+    #     self.assertGreater(len(zerodaytoday.exploits), 0, '0day.today could not find any Dirty COW exploit')
 
     def test_securityfocus(self):
         securityfocus = SecurityFocus(_search_string=self.phrase, _limit=self.limit)
