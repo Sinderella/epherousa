@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import re
+from colorama import Fore, Style
 from datetime import datetime
 from requests import ConnectionError
 from requests import Session
@@ -76,14 +77,14 @@ class Searcher(object):
     def find_exploits_by_string(self):
         """Searches the database using self.search string"""
 
-    def print_exploits(self):
+    def print_exploits(self, keywords):
         """Print the contents of self.exploits, only up to the limit of the searcher"""
         if self.limit == 0:
             for e in self.exploits:
-                e.print_exploit()
+                e.print_exploit(keywords)
         else:
             for e in self.exploits[:self.limit]:
-                e.print_exploit()
+                e.print_exploit(keywords)
 
 
 class Exploit:
@@ -100,9 +101,11 @@ class Exploit:
         self.url = _url
 
     @staticmethod
-    def print_formatted(var, name, end_line=False):
+    def print_formatted(var, name, keywords=None, end_line=False):
         str_format = "| {:" + str(Exploit.column_widths[name]) + "}"
         out = str_format.format(str(var))
+        if keywords:
+            out = Exploit.highlight_kw(out, keywords)
         out = out[:Exploit.column_widths[name] + 2]  # Cut the string if necessary
         if end_line:
             out += "|"
@@ -112,12 +115,21 @@ class Exploit:
 
         print(out, end=end)
 
-    def print_exploit(self):
+    @staticmethod
+    def highlight_kw(line, keywords):
+        out = line
+        replace_format = Fore.RED + Style.BRIGHT + '{}' + Style.RESET_ALL + Fore.RESET
+        for keyword in keywords:
+            regex_pattern = re.compile(re.escape(keyword), re.IGNORECASE)
+            out = regex_pattern.sub(replace_format.format(keyword), out)
+        return out
+
+    def print_exploit(self, keywords):
         """Prints the exploit in a standardised way"""
         date_string = datetime.strftime(self.date, "%Y-%m-%d")
-        self.print_formatted(self.cve, "cve")
-        self.print_formatted(self.desc, "desc")
-        self.print_formatted(date_string, "date")
+        self.print_formatted(self.cve, "cve", keywords)
+        self.print_formatted(self.desc, "desc", keywords)
+        self.print_formatted(date_string, "date", keywords)
         # just commented out so it doesn't print the cost column (issue #19)
         # self.print_formatted(self.cost, "cost")
         self.print_formatted(self.url, "url", end_line=True)

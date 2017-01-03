@@ -103,10 +103,10 @@ def main():
     # We should also consider searching in multiple ways in the future! But it will be easy to add up later on
     if args.phrase or not re.match("CVE", args.cve, re.IGNORECASE):
         phrase = args.cve
-        cve = ""
+        cve = None
     else:
         cve = args.cve
-        phrase = ""
+        phrase = None
 
     # Actually create the searchers
     limit = args.limit if args.limit else 0
@@ -129,6 +129,6 @@ def main():
     Exploit.calculate_widths(searcher_list)
     Exploit.print_header()
     for s in searcher_list:
-        s.print_exploits()
+        s.print_exploits(cve) if cve else s.print_exploits(phrase.split(' '))
 
     Exploit.print_footer()
