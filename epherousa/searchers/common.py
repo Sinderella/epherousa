@@ -7,6 +7,8 @@ from requests import ConnectionError
 from requests import Session
 from requests import Timeout
 
+from logbook import DEBUG
+
 from epherousa.logger import setup_logger
 
 
@@ -23,11 +25,18 @@ class Searcher(object):
         self.search_string = _search_string
         self.args = _args
         self.limit = _limit
+
         self.log = setup_logger(self.__str__())
-        if self.args.quiet:
+
+        # do not log if quiet exists
+        if self.args and self.args.quiet:
             self.log.disable()
-        if self.args.verbose:
+        # log as necessary if args exists
+        elif self.args and self.args.verbose:
             self.log.level = self.args.verbose
+        # log everything if args does not exist, only happens in tests
+        elif not self.args:
+            self.log.level = DEBUG
 
         self.setup()
 
