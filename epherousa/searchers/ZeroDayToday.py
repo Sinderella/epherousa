@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 from lxml import html
+from requests import ConnectionError
 
 from .common import Searcher, Exploit
 
@@ -27,6 +28,9 @@ class ZeroDayToday(Searcher):
         self.log.info('Requesting {}'.format(search_url))
         search_page = self.session.post(search_url, data={"agree": "Yes%2C+I+agree"}, allow_redirects=True,
                                         headers={"Referer": search_url})
+        if search_page.status_code >= 400:
+            raise ConnectionError('Cannot retrieve information (status code: {})'.format(search_page.status_code))
+
         search_tree = html.fromstring(search_page.content)
 
         exploit_rows = search_tree.xpath("//div[@class='ExploitTableContent']")

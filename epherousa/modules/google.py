@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 import re
 from bs4 import BeautifulSoup
 from datetime import datetime
-from requests import Session
 from requests import Timeout
 
 from epherousa.logger import setup_logger
 from epherousa.models.googleresult import GoogleResult
+from epherousa.modules.requester import Requester
 
 
 class Google(object):
@@ -16,9 +16,18 @@ class Google(object):
     _SEARCH_URL = _BASE_URL.format('/search?q={}')
     _SITE_PAT = 'site:{} {}'
 
-    def __init__(self, called_by=None):
-        self.session = Session()
+    def __init__(self, args=None, called_by=None):
+        self.args = args
+        self.session = self._setup_session()
         self.log = setup_logger('{} Google'.format(called_by) if called_by else 'Google')
+
+    def _setup_session(self):
+        # tests will not have args
+        try:
+            session = Requester(self.args)
+        except AttributeError:
+            session = Requester()
+        return session
 
     def site(self, site_url, keyword):
         clean_site_url = re.sub('http(s)://', '', site_url)
