@@ -35,6 +35,8 @@ def parse_args():
                                  " 0 for no limit.")
     arg_parser.add_argument("-q", "--quiet", action="store_true",
                             help="Do not display ephe's banner.")
+    arg_parser.add_argument("-px", "--proxy", help="Proxy for ephe, used in every requests.")
+    arg_parser.add_argument("-k", "--insecure", action="store_false", help="Ignore SSL certificates in requests.")
 
     return arg_parser.parse_args()
 
