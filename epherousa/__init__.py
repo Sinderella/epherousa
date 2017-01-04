@@ -8,8 +8,8 @@ import re
 import signal
 import sys
 import threading
-from builtins import input
 
+from builtins import input
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
@@ -132,8 +132,6 @@ def main():
     threads = []
     for s in searcher_list:
         new_thread = threading.Thread(target=s.find_exploits)
-        # threads will exit if main thread exits
-        new_thread.daemon = True
         new_thread.start()
         threads.append(new_thread)
         log.notice("Spawned a thread for searching at {}".format(s))
