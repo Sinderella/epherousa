@@ -121,7 +121,8 @@ class Exploit:
         replace_format = Fore.RED + Style.BRIGHT + '{}' + Style.RESET_ALL + Fore.RESET
         for keyword in keywords:
             regex_pattern = re.compile(re.escape(keyword), re.IGNORECASE)
-            out = regex_pattern.sub(replace_format.format(keyword), out)
+            # comment out the highlight as it messes up the table
+            # out = regex_pattern.sub(replace_format.format(keyword), out)
         return out
 
     def print_exploit(self, keywords):
