@@ -21,7 +21,7 @@ class Requester(Session):
                 'http': self.args.proxy,
                 'https': self.args.proxy
             }
-            self.verify_ssl = self.args.insecure
+            self.verify_ssl = not self.args.insecure
         except AttributeError:
             self.proxies = None
             self.verify_ssl = True
