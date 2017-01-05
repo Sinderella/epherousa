@@ -10,7 +10,7 @@ from requests import Timeout
 from logbook import DEBUG
 
 from epherousa.logger import setup_logger
-
+from ..libraries.pycvesearch.core import CVESearch
 
 class Searcher(object):
     """A template class for the exploit searchers"""
