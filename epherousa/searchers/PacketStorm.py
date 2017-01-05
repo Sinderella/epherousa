@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import re
 from datetime import datetime
-from lxml import html
+# from lxml import html
 
 from .common import Searcher, Exploit
 

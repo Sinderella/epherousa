@@ -6,9 +6,8 @@ from datetime import datetime
 from requests import ConnectionError
 from requests import Session
 from requests import Timeout
-
 from epherousa.logger import setup_logger
-
+from ..libraries.pycvesearch.core import CVESearch
 
 class Searcher(object):
     """A template class for the exploit searchers"""
@@ -44,12 +43,21 @@ class Searcher(object):
         session.headers.update(self._USER_AGENT)
         return session
 
+    def test_cvesearch(self):
+        cve = CVESearch()
+        print(cve.dbinfo())
+        #data = cve.id('CVE-2008-4250')
+        #data = {k.decode('utf8'): v.decode('utf8') for k, v in data.items()}
+        #print(data)
+
     def find_exploits(self):
         """Update self.exploits after searching"""
         try:
             if self.cve != "":
                 self.find_exploits_by_cve()
+                self.test_cvesearch()
             else:
+                self.test_cvesearch()
                 self.find_exploits_by_string()
             self.log.debug('Found {} exploits'.format(len(self.exploits)))
         except Timeout as e:
