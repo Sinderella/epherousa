@@ -6,25 +6,37 @@ from datetime import datetime
 from requests import ConnectionError
 from requests import Session
 from requests import Timeout
+
+from logbook import DEBUG
+
 from epherousa.logger import setup_logger
-from ..libraries.pycvesearch.core import CVESearch
+
 
 class Searcher(object):
     """A template class for the exploit searchers"""
     _USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0'}
     _CVE_PATTERN = re.compile('CVE-\d{4}-\d{4,7}')
 
-    def __init__(self, _cve="", _search_string="", _verbose=False, _limit=0):
+    def __init__(self, _cve="", _search_string="", _args=None, _limit=0):
         self.exploits = []
 
         self.session = self._setup_session()
         self.cve = _cve
         self.search_string = _search_string
-        self.verbose = _verbose
+        self.args = _args
         self.limit = _limit
+
         self.log = setup_logger(self.__str__())
-        if self.verbose:
-            self.log.level = self.verbose
+
+        # do not log if quiet exists
+        if self.args and self.args.quiet:
+            self.log.disable()
+        # log as necessary if args exists
+        elif self.args and self.args.verbose:
+            self.log.level = self.args.verbose
+        # log everything if args does not exist, only happens in tests
+        elif not self.args:
+            self.log.level = DEBUG
 
         self.setup()
 
@@ -43,21 +55,12 @@ class Searcher(object):
         session.headers.update(self._USER_AGENT)
         return session
 
-    def test_cvesearch(self):
-        cve = CVESearch()
-        print(cve.dbinfo())
-        #data = cve.id('CVE-2008-4250')
-        #data = {k.decode('utf8'): v.decode('utf8') for k, v in data.items()}
-        #print(data)
-
     def find_exploits(self):
         """Update self.exploits after searching"""
         try:
-            if self.cve != "":
+            if self.cve:
                 self.find_exploits_by_cve()
-                self.test_cvesearch()
             else:
-                self.test_cvesearch()
                 self.find_exploits_by_string()
             self.log.debug('Found {} exploits'.format(len(self.exploits)))
         except Timeout as e:
