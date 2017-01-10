@@ -5,8 +5,12 @@ from __future__ import unicode_literals
 
 import argparse
 import re
+import signal
+import sys
 import threading
 
+from builtins import input
+from functools import partial
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
@@ -72,11 +76,21 @@ def print_banner():
           `'.__/""")
 
 
+def process_signal_exit(log, signum, stack):
+    log.critical("Received SIGINT interrupt signal.")
+    choice = input('\nDo you really wish to exit? [y/N]')
+    try:
+        if choice.lower().startswith('y'):
+            sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+
 def main():
     args = parse_args()
     log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
-
+    signal.signal(signal.SIGINT, partial(process_signal_exit, log))
     # print banner
     if not args.quiet:
         print_banner()

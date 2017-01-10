@@ -1,5 +1,6 @@
 colorama>=0.3.7
 beautifulsoup4>=4.5.1
+future>=0.16.0
 Logbook>=1.0.0
 lxml>=3.6.4
 requests>=2.11.1
