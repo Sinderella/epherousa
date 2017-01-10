@@ -82,6 +82,7 @@ class SecurityFocus(Searcher):
                         text = content.text
                         if 'CVE' in text:
                             text = re.sub(r'[\t\n]', '', text)
+
                             cve = text.split(':')[1]
                         if 'Published' in text:
                             text = re.sub(r'[\t\n]', '', text)
