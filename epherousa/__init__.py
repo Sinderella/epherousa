@@ -10,6 +10,7 @@ import sys
 import threading
 
 from builtins import input
+from functools import partial
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
@@ -75,8 +76,9 @@ def print_banner():
           `'.__/""")
 
 
-def process_signal_exit(signum, stack):
-    choice = input('\nexit? [y/N]')
+def process_signal_exit(log, signum, stack):
+    log.critical("Received SIGINT interrupt signal.")
+    choice = input('\nDo you really wish to exit? [y/N]')
     try:
         if choice.lower().startswith('y'):
             sys.exit(0)
@@ -85,11 +87,10 @@ def process_signal_exit(signum, stack):
 
 
 def main():
-    signal.signal(signal.SIGINT, process_signal_exit)
     args = parse_args()
     log = setup_logger('ephe')
     log.level = DEBUG if args.verbose else NOTICE
-
+    signal.signal(signal.SIGINT, partial(process_signal_exit, log))
     # print banner
     if not args.quiet:
         print_banner()
