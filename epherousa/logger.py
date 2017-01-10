@@ -56,6 +56,6 @@ class ColourHandler(ColourisingMixin, StreamHandler):
 def setup_logger(logger_name):
     handler = ColourHandler(sys.stdout)
     handler.format_string = '{record.time:%H:%M:%S} [{record.level_name[0]}] {record.channel}: {record.message}'
-    handler.push_thread()
+    handler.push_application()
     log = Logger(logger_name)
     return log
