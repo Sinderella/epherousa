@@ -1,0 +1,10 @@
+enable:
+  - all
+disable:
+  - ZeroDayToday
+  - PacketStorm
+exploit_limit: 5
+quiet: false
+verbose: false
+proxy: http://127.0.0.1:8080
+ignore_ssl: false

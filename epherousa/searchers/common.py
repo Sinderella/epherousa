@@ -7,7 +7,7 @@ from requests import ConnectionError
 from requests import Session
 from requests import Timeout
 
-from logbook import DEBUG
+from logbook import DEBUG, NOTICE
 
 from epherousa.logger import setup_logger
 
@@ -17,25 +17,25 @@ class Searcher(object):
     _USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0'}
     _CVE_PATTERN = re.compile('CVE-\d{4}-\d{4,7}')
 
-    def __init__(self, _cve="", _search_string="", _args=None, _limit=0):
+    def __init__(self, _cve="", _search_string="", _config=None, _limit=0):
         self.exploits = []
 
         self.session = self._setup_session()
         self.cve = _cve
         self.search_string = _search_string
-        self.args = _args
+        self.config = _config
         self.limit = _limit
 
         self.log = setup_logger(self.__str__())
 
         # do not log if quiet exists
-        if self.args and self.args.quiet:
+        if self.config and self.config['quiet']:
             self.log.disable()
         # log as necessary if args exists
-        elif self.args and self.args.verbose:
-            self.log.level = self.args.verbose
+        elif self.config and not self.config['verbose']:
+            self.log.level = NOTICE
         # log everything if args does not exist, only happens in tests
-        elif not self.args:
+        elif not self.config:
             self.log.level = DEBUG
 
         self.setup()
