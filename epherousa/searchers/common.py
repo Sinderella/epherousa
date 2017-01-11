@@ -117,6 +117,12 @@ class Exploit:
 
     @staticmethod
     def highlight_kw(line, keywords):
+        """Wrap the given keywords with ASCII colour code in the given line
+
+        :param line: String of message
+        :param keywords: Keywords to be highlighted
+        :return: Highlighted `line`
+        """
         out = line
         replace_format = Fore.RED + Style.BRIGHT + '{}' + Style.RESET_ALL + Fore.RESET
         for keyword in keywords:
