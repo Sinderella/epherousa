@@ -8,7 +8,7 @@ from requests import ConnectionError
 from requests import Timeout
 from requests.exceptions import SSLError
 
-from logbook import DEBUG
+from logbook import DEBUG, NOTICE
 
 from epherousa.logger import setup_logger
 from epherousa.modules.requester import Requester
@@ -47,8 +47,8 @@ class Searcher(object):
         if self.args and self.args.quiet:
             log.disable()
         # log as necessary if args exists
-        elif self.args and self.args.verbose:
-            log.level = self.args.verbose
+        elif self.args and not self.args.verbose:
+            log.level = NOTICE
         # log everything if args does not exist, only happens in tests
         elif not self.args:
             log.level = DEBUG
