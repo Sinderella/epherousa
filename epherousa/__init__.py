@@ -8,9 +8,9 @@ import re
 import signal
 import sys
 import threading
+from functools import partial
 
 from builtins import input
-from functools import partial
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
@@ -40,7 +40,7 @@ def parse_args():
     arg_parser.add_argument("-q", "--quiet", action="store_true",
                             help="Do not display ephe's banner.")
     arg_parser.add_argument("-px", "--proxy", help="Proxy for ephe, used in every requests.")
-    arg_parser.add_argument("-k", "--insecure", action="store_true", help="Ignore SSL certificates in requests.")
+    arg_parser.add_argument("-k", "--ignore-ssl", action="store_true", help="Ignore SSL certificates in requests.")
 
     return arg_parser.parse_args()
 
@@ -60,21 +60,21 @@ def filter_class_list(class_list, regex_list):
 
 
 def print_banner():
-        """Prints ephe's banner on startup"""
-        print("""
-                         .-""-.
-                        (___/\ \\
-                       ( |' ' ) )   """
-              + "\tEphe v" + __version__ +
-              """
-                     __) _\=_/  (
-                ____(__._ `  \   )
-              .(/8-.._.88,   ; (
-             /   /8.    `88., |  )
-  _.`'---.._/   /.8_ ____.'_| |_/
+    """Prints ephe's banner on startup"""
+    print("""
+                     .-""-.
+                    (___/\ \\
+                   ( |' ' ) )   """
+          + "\tEphe v" + __version__ +
+          """
+                 __) _\=_/  (
+            ____(__._ `  \   )
+          .(/8-.._.88,   ; (
+         /   /8.    `88., |  )
+_.`'---.._/   /.8_ ____.'_| |_/
 '-'``'-._     /  | `-........'
-        `;-"`;  |"""
-        + 6*"\t" + "Dionach Ltd" + """
+    `;-"`;  |"""
+          + 6 * "\t" + "Dionach Ltd" + """
           `'.__/""")
 
 
