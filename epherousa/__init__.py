@@ -10,6 +10,7 @@ import sys
 import threading
 from functools import partial
 
+from functools import partial
 from builtins import input
 from logbook import NOTICE, DEBUG
 
