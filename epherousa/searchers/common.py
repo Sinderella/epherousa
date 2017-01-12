@@ -145,7 +145,7 @@ class Exploit:
             return  # Otherwise we get a crash for trying evaluate max of an empty sequence
 
         widths = {}
-        widths["cve"] = max([len(e.cve) for e in exploits])
+        widths["cve"] = max([len(e.cve) for e in exploits if e.cve])
         widths["desc"] = max([len(e.desc) for e in exploits])
         # just commented out so it doesn't print the cost column (issue #19)
         # widths["cost"] = max([len(str(e.cost)) for e in exploits])

@@ -8,9 +8,9 @@ import re
 import signal
 import sys
 import threading
+from functools import partial
 
 from builtins import input
-from functools import partial
 from logbook import NOTICE, DEBUG
 
 from .logger import setup_logger
@@ -23,22 +23,23 @@ def parse_args():
     # Deal with argument parsing
     # maybe add these to an init class one day
     arg_parser = argparse.ArgumentParser(
-        description="Search multiple sources for exploits for CVEs or software versions")
-    arg_parser.add_argument("cve", help="The cve to find exploits for.")
-    arg_parser.add_argument("-d", "--disable",
-                            help="Disable only these scanners. Input is interpreted as a series of comma-seperated "
-                                 "case-insensitive regexes.")
-    arg_parser.add_argument("-e", "--enable",
-                            help="Enable only these scanners. Input is interpreted as a series of comma-seperated "
-                                 "case-insensitive regexes.")
-    arg_parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging.")
-    arg_parser.add_argument("-p", "--phrase", action="store_true",
-                            help="Force interpreting the search argument as a search string rather than a CVE")
-    arg_parser.add_argument("-l", "--limit", type=int, default=10,
-                            help="Limit the results of the exploits returned for each Scanner. Default value is set to"
-                                 " 0 for no limit.")
-    arg_parser.add_argument("-q", "--quiet", action="store_true",
-                            help="Do not display ephe's banner.")
+        description='Search multiple sources for exploits for CVEs or software versions')
+    arg_parser.add_argument('cve', help='The cve to find exploits for.')
+    arg_parser.add_argument('-d', '--disable',
+                            help='Disable only these scanners. Input is interpreted as a series of comma-seperated '
+                                 'case-insensitive regexes.')
+    arg_parser.add_argument('-e', '--enable',
+                            help='Enable only these scanners. Input is interpreted as a series of comma-seperated '
+                                 'case-insensitive regexes.')
+    arg_parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose logging.')
+    arg_parser.add_argument('-p', '--phrase', action='store_true',
+                            help='Force interpreting the search argument as a search string rather than a CVE')
+    arg_parser.add_argument('-l', '--limit', type=int, default=10,
+                            help='Limit the results of the exploits returned for each Scanner. Default value is set to'
+                                 ' 0 for no limit.')
+    arg_parser.add_argument('-q', '--quiet', action='store_true',
+                            help='Do not display ephe\'s banner.')
+    arg_parser.add_argument('-V', '--version', action='version', version='%(prog)s version: {}'.format(__version__))
 
     return arg_parser.parse_args()
 

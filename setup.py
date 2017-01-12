@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 version = {}
 with open('epherousa/version.py') as f:
@@ -14,14 +14,19 @@ setup(
     # author='',
     # author_email='',
     # url='',
-    packages=[
-        'epherousa',
-        'epherousa.models',
-        'epherousa.modules',
-        'epherousa.searchers',
-    ],
-    scripts=[
-        'bin/ephe',
-        'bin/epherousa'
+    packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'ephe = epherousa.__init__:main',
+            'epherousa = epherousa.__init__:main',
+        ]
+    },
+    install_requires=[
+        'colorama>=0.3.7',
+        'beautifulsoup4>=4.5.1',
+        'future>=0.16.0',
+        'Logbook>=1.0.0',
+        'lxml>=3.6.4',
+        'requests>=2.11.1'
     ]
 )
