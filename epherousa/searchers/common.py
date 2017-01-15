@@ -134,7 +134,7 @@ class Exploit:
     def print_exploit(self, keywords):
         """Prints the exploit in a standardised way"""
         date_string = datetime.strftime(self.date, "%Y-%m-%d")
-        self.print_formatted(self.cve, "cve", keywords)
+        self.print_formatted(self.cve if self.cve else "N/A", "cve", keywords)
         self.print_formatted(self.desc, "desc", keywords)
         self.print_formatted(date_string, "date", keywords)
         # just commented out so it doesn't print the cost column (issue #19)
