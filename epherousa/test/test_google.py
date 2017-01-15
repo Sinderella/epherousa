@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
-import unittest
 
 from epherousa.modules.google import Google
+from epherousa.test.base_test import BaseTest
 
 
-class TestGoogle(unittest.TestCase):
+class TestGoogle(BaseTest):
     def setUp(self):
         self.google = Google()
         self.test_site = 'exploit-db.com'

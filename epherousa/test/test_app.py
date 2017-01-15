@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 import os
-import unittest
+
+from epherousa.test.base_test import BaseTest
 
 
-class TestApp(unittest.TestCase):
+class TestApp(BaseTest):
     def setUp(self):
         self.command = 'ephe {1} \'{0}\''
 

@@ -6,9 +6,10 @@ import unittest
 from epherousa.searchers.ExploitDB import ExploitDB
 from epherousa.searchers.PacketStorm import PacketStorm
 from epherousa.searchers.SecurityFocus import SecurityFocus
+from epherousa.test.base_test import BaseTest
 
 
-class TestSearcherCVE(unittest.TestCase):
+class TestSearcherCVE(BaseTest):
     def setUp(self):
         # Dirty COW CVE
         self.cve = 'CVE-2016-5195'
