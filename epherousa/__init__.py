@@ -39,6 +39,8 @@ def parse_args():
                                  " 0 for no limit.")
     arg_parser.add_argument("-q", "--quiet", action="store_true",
                             help="Do not display ephe's banner.")
+    arg_parser.add_argument("-s", "--short", action="store_true",
+                            help="Quick ephe results without cve details information.")
     arg_parser.add_argument("-px", "--proxy", help="Proxy for ephe, used in every requests.")
     arg_parser.add_argument("-k", "--ignore-ssl", action="store_true", help="Ignore SSL certificates in requests.")
     arg_parser.add_argument('-V', '--version', action='version', version='%(prog)s version: {}'.format(__version__))
