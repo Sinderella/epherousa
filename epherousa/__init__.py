@@ -41,6 +41,7 @@ def parse_args():
                             help="Do not display ephe's banner.")
     arg_parser.add_argument("-px", "--proxy", help="Proxy for ephe, used in every requests.")
     arg_parser.add_argument("-k", "--ignore-ssl", action="store_true", help="Ignore SSL certificates in requests.")
+    arg_parser.add_argument('-V', '--version', action='version', version='%(prog)s version: {}'.format(__version__))
 
     return arg_parser.parse_args()
 

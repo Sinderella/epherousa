@@ -166,6 +166,7 @@ class Exploit:
         widths = {}
         widths["cve"] = max([len(e.cve) for e in exploits if e.cve])
         widths["desc"] = max([len(e.desc) for e in exploits if e.desc])
+
         # just commented out so it doesn't print the cost column (issue #19)
         # widths["cost"] = max([len(str(e.cost)) for e in exploits])
         # +1 so the pipe ('|') doesn't be a part of the URL as it's next to the URL
