@@ -2,42 +2,33 @@
 from __future__ import unicode_literals, print_function
 
 import re
+from colorama import Fore, Style
 from datetime import datetime
 from requests import ConnectionError
-from requests import Session
 from requests import Timeout
+from requests.exceptions import SSLError
 
-from logbook import DEBUG
+from logbook import DEBUG, NOTICE
 
 from epherousa.logger import setup_logger
+from epherousa.modules.requester import Requester
 
 
 class Searcher(object):
     """A template class for the exploit searchers"""
-    _USER_AGENT = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:45.0) Gecko/20100101 Firefox/45.0'}
     _CVE_PATTERN = re.compile('CVE-\d{4}-\d{4,7}')
 
     def __init__(self, _cve="", _search_string="", _args=None, _limit=0):
         self.exploits = []
 
-        self.session = self._setup_session()
         self.cve = _cve
         self.search_string = _search_string
         self.args = _args
         self.limit = _limit
 
-        self.log = setup_logger(self.__str__())
+        self.session = Requester(self.args)
 
-        # do not log if quiet exists
-        if self.args and self.args.quiet:
-            self.log.disable()
-        # log as necessary if args exists
-        elif self.args and self.args.verbose:
-            self.log.level = self.args.verbose
-        # log everything if args does not exist, only happens in tests
-        elif not self.args:
-            self.log.level = DEBUG
-
+        self.log = self._setup_logger()
         self.setup()
 
     def __str__(self):
@@ -50,10 +41,18 @@ class Searcher(object):
         """Called at the end of init to make initial setup easier for searchers"""
         self.log.debug('Setting up searcher: {}'.format(self.__str__()))
 
-    def _setup_session(self):
-        session = Session()
-        session.headers.update(self._USER_AGENT)
-        return session
+    def _setup_logger(self):
+        log = setup_logger(self.__str__())
+        # do not log if quiet exists
+        if self.args and self.args.quiet:
+            log.disable()
+        # log as necessary if args exists
+        elif self.args and not self.args.verbose:
+            log.level = NOTICE
+        # log everything if args does not exist, only happens in tests
+        elif not self.args:
+            log.level = DEBUG
+        return log
 
     def find_exploits(self):
         """Update self.exploits after searching"""
@@ -63,6 +62,8 @@ class Searcher(object):
             else:
                 self.find_exploits_by_string()
             self.log.debug('Found {} exploits'.format(len(self.exploits)))
+        except SSLError as e:
+            self.log.error('Use \'-k\' to ignore digital certificates verifications: {}'.format(e))
         except Timeout as e:
             self.log.error('Timed out, {} is down, try again later...: {}'.format(self, e))
         except ConnectionError as e:
@@ -76,14 +77,14 @@ class Searcher(object):
     def find_exploits_by_string(self):
         """Searches the database using self.search string"""
 
-    def print_exploits(self):
+    def print_exploits(self, keywords):
         """Print the contents of self.exploits, only up to the limit of the searcher"""
         if self.limit == 0:
             for e in self.exploits:
-                e.print_exploit()
+                e.print_exploit(keywords)
         else:
             for e in self.exploits[:self.limit]:
-                e.print_exploit()
+                e.print_exploit(keywords)
 
 
 class Exploit:
@@ -100,9 +101,11 @@ class Exploit:
         self.url = _url
 
     @staticmethod
-    def print_formatted(var, name, end_line=False):
+    def print_formatted(var, name, keywords=None, end_line=False):
         str_format = "| {:" + str(Exploit.column_widths[name]) + "}"
         out = str_format.format(str(var))
+        if keywords:
+            out = Exploit.highlight_kw(out, keywords)
         out = out[:Exploit.column_widths[name] + 2]  # Cut the string if necessary
         if end_line:
             out += "|"
@@ -112,12 +115,28 @@ class Exploit:
 
         print(out, end=end)
 
-    def print_exploit(self):
+    @staticmethod
+    def highlight_kw(line, keywords):
+        """Wrap the given keywords with ASCII colour code in the given line
+
+        :param line: String of message
+        :param keywords: Keywords to be highlighted
+        :return: Highlighted `line`
+        """
+        out = line
+        replace_format = Fore.RED + Style.BRIGHT + '{}' + Style.RESET_ALL + Fore.RESET
+        for keyword in keywords:
+            regex_pattern = re.compile(re.escape(keyword), re.IGNORECASE)
+            # comment out the highlight as it messes up the table
+            # out = regex_pattern.sub(replace_format.format(keyword), out)
+        return out
+
+    def print_exploit(self, keywords):
         """Prints the exploit in a standardised way"""
         date_string = datetime.strftime(self.date, "%Y-%m-%d")
-        self.print_formatted(self.cve, "cve")
-        self.print_formatted(self.desc, "desc")
-        self.print_formatted(date_string, "date")
+        self.print_formatted(self.cve, "cve", keywords)
+        self.print_formatted(self.desc, "desc", keywords)
+        self.print_formatted(date_string, "date", keywords)
         # just commented out so it doesn't print the cost column (issue #19)
         # self.print_formatted(self.cost, "cost")
         self.print_formatted(self.url, "url", end_line=True)
@@ -146,7 +165,8 @@ class Exploit:
 
         widths = {}
         widths["cve"] = max([len(e.cve) for e in exploits if e.cve])
-        widths["desc"] = max([len(e.desc) for e in exploits])
+        widths["desc"] = max([len(e.desc) for e in exploits if e.desc])
+
         # just commented out so it doesn't print the cost column (issue #19)
         # widths["cost"] = max([len(str(e.cost)) for e in exploits])
         # +1 so the pipe ('|') doesn't be a part of the URL as it's next to the URL

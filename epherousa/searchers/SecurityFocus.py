@@ -2,7 +2,6 @@
 import re
 from bs4 import BeautifulSoup
 from datetime import datetime
-from requests import Session
 
 from epherousa.modules.google import Google
 from .common import Searcher, Exploit
@@ -57,10 +56,9 @@ class SecurityFocus(Searcher):
             self.log.notice('SecurityFocus returned no results.')
             
     def find_exploits_by_string(self):
-        google = Google()
+        google = Google(self.args)
         google_results = google.site(self._URL.format(''), self.search_string)
 
-        session = Session()
         # TODO: currently does not respect limit, but retrieve only first page
         # only get URL with '/bid/'
         for result in google_results:
@@ -73,7 +71,7 @@ class SecurityFocus(Searcher):
                 if any(clean_url == exploit.url for exploit in self.exploits):
                     continue
                 # retrieving more info (CVE/date)
-                response = session.get(clean_url)
+                response = self.session.get(clean_url)
                 content = response.content
                 soup = BeautifulSoup(content, 'html.parser')
                 title = soup.find('span', class_='title').text
