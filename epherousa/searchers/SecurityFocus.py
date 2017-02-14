@@ -74,7 +74,11 @@ class SecurityFocus(Searcher):
                 response = self.session.get(clean_url)
                 content = response.content
                 soup = BeautifulSoup(content, 'html.parser')
-                title = soup.find('span', class_='title').text
+                try:
+                    title = soup.find('span', class_='title').text
+                except AttributeError:
+                    title = 'N/A: This should not happen. If it does, something went horribly wrong.'
+                    self.log.warn('Unknown title: {}'.format(clean_url))
                 cve = None
                 date = None
                 for content in soup.find_all('table')[2].contents:
