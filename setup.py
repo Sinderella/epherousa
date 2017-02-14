@@ -23,7 +23,6 @@ setup(
     },
     install_requires=[
         'colorama>=0.3.7',
-        'backports.csv>=1.0.2',
         'beautifulsoup4>=4.5.1',
         'future>=0.16.0',
         'Logbook>=1.0.0',
