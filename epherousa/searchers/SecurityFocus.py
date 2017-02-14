@@ -17,10 +17,11 @@ class SecurityFocus(Searcher):
         if len(cve) <= 13:
             return cve
 
-        tmp = cve[0:13]
-        for i in range(13, len(cve), 13):
-            tmp += ',{}'.format(cve[i:i + 13])
-        return tmp
+        tmp = set(cve.split('CVE')[1:])
+
+        if len(tmp) == 1:
+            return 'CVE{}'.format(tmp.pop())
+        return 'CVE-' + ', CVE'.join(tmp)[2:]
 
     def find_exploits_by_cve(self):
         self.log.debug('Posting search form: {} with {}'.format(self._SEARCH_URL, self.cve))
