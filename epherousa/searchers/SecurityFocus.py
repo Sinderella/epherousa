@@ -1,7 +1,8 @@
 # coding=utf-8
 import re
-from bs4 import BeautifulSoup
 from datetime import datetime
+
+from bs4 import BeautifulSoup
 
 from epherousa.modules.google import Google
 from .common import Searcher, Exploit
@@ -55,7 +56,12 @@ class SecurityFocus(Searcher):
                 '{}'.format(e))
         except IndexError as e:
             self.log.notice('SecurityFocus returned no results.')
-            
+
+        # uses string based as fall back, see #62
+        if len(self.exploits) == 0:
+            self.search_string = self.cve
+            self.find_exploits_by_string()
+
     def find_exploits_by_string(self):
         google = Google(self.args)
         google_results = google.site(self._URL.format(''), self.search_string)
