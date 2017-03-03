@@ -15,6 +15,8 @@ class SecurityFocus(Searcher):
 
     @staticmethod
     def _format_cve(cve):
+        if len(cve) == 0:
+            return None
         if len(cve) <= 13:
             return cve
 
@@ -79,6 +81,11 @@ class SecurityFocus(Searcher):
                     continue
                 # retrieving more info (CVE/date)
                 response = self.session.get(clean_url)
+                for _ in range(3):
+                    if response.status_code != 200:
+                        response = self.session.get(clean_url)
+                    else:
+                        break
                 content = response.content
                 soup = BeautifulSoup(content, 'html.parser')
                 try:

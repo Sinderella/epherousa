@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import re
-from bs4 import BeautifulSoup
 from datetime import datetime
+
+from bs4 import BeautifulSoup
 from requests import Timeout
 
 from epherousa.logger import setup_logger
@@ -55,7 +56,7 @@ class Google(object):
                 try:
                     date = datetime.strptime(' '.join(desc.split(' ')[0:3]), '%d %b %Y')
                     desc = ' '.join(desc.split(' ')[3:])
-                except ValueError:
+                except (TypeError, ValueError):
                     pass
 
                 google_result = GoogleResult()

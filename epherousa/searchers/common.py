@@ -2,13 +2,13 @@
 from __future__ import unicode_literals, print_function
 
 import re
-from colorama import Fore, Style
 from datetime import datetime
+
+from colorama import Fore, Style
+from logbook import DEBUG, NOTICE
 from requests import ConnectionError
 from requests import Timeout
 from requests.exceptions import SSLError
-
-from logbook import DEBUG, NOTICE
 
 from epherousa.logger import setup_logger
 from epherousa.modules.requester import Requester
@@ -164,7 +164,11 @@ class Exploit:
             return  # Otherwise we get a crash for trying evaluate max of an empty sequence
 
         widths = {}
-        widths["cve"] = max([len(e.cve) for e in exploits if e.cve])
+        try:
+            widths["cve"] = max([len(e.cve) for e in exploits if e.cve])
+        except ValueError:
+            widths["cve"] = 0
+
         widths["desc"] = max([len(e.desc) for e in exploits if e.desc])
 
         # just commented out so it doesn't print the cost column (issue #19)
